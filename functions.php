@@ -141,6 +141,7 @@ function postAssetRequest(){
     $postdate = $date;
     $compdate = e($_POST['compdate']);
     $assetdesc = $_POST['assetdesc'];
+    $quantity = $_POST['quantity'];
     
     $query = "INSERT INTO requests 
               (id, type, custname, postdate, compdate, assetdesc, postby, status) 
