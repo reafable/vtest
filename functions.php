@@ -141,12 +141,17 @@ function postAssetRequest(){
     $postdate = $date;
     $compdate = e($_POST['compdate']);
     $assetdesc = $_POST['assetdesc'];
-    $quantity = $_POST['quantity'];
+    $quantity = $_POST['assetQuantity'];
+    
+    foreach($assetdesc as $descVal => $a){
+        
+        $insertVal[] = $a . " x " . $quantity[$descVal];
+    }
     
     $query = "INSERT INTO requests 
               (id, type, custname, postdate, compdate, assetdesc, postby, status) 
               VALUES 
-              (NULL, 'asset', '$custname', '$postdate', '$compdate', '$assetdesc', '$user', 'pooled')";
+              (NULL, 'asset', '$custname', '$postdate', '$compdate', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
 }
