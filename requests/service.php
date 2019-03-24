@@ -38,7 +38,7 @@ if (isAdmin()) {
            
            <div class="row">
                
-                   <form class="col" action="confirmation.php" method="post">
+                   <form class="col" action="service.php" method="post">
                        <div class="form-group">
                            <label for="custname">Customer Name</label>
                            <input type="text" class="form-control" id="custname" name="custname" placeholder="Enter customer name" required>
@@ -59,10 +59,6 @@ if (isAdmin()) {
        </div>
        
    </div>
-   
-    <div class="container h-100">
-       
-    </div>
 
     <script src="../js/jquery-3.3.1.slim.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>

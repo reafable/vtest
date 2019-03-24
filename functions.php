@@ -118,9 +118,9 @@ function postServiceRequest(){
     $servdesc = e($_POST['servdesc']);
     
     $query = "INSERT INTO requests 
-              (id, 'uid', type, custname, postdate, compdate, servdesc, postby, status) 
+              (id, uid, type, custname, postdate, compdate, servdesc, postby, status) 
               VALUES 
-              (NULL, '$uid', 'service', '$custname', '$postdate', '$compdate', '$servdesc', '$user', 'pooled')";
+              (NULL, '" . $_SESSION['uid'] . "', 'service', '$custname', '$postdate', '$compdate', '$servdesc', '$user', 'pooled')";
     
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
@@ -159,7 +159,7 @@ function postAssetRequest(){
     $query = "INSERT INTO requests 
               (id, uid, type, custname, postdate, compdate, assetdesc, postby, status) 
               VALUES 
-              (NULL, '$uid', 'asset', '$custname', '$postdate', '$compdate', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
+              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
 }
