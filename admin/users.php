@@ -8,135 +8,135 @@ if (!isAdmin()) {
 	header('location: ../login.php');
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
 
-    <script src="../js/jquery-3.3.1.min.js"></script>
+        <script src="../js/jquery-3.3.1.min.js"></script>
 
-    <script type="text/javascript" src="../js/datatables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
-    <script src="../js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="../js/datatables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
+        <script src="../js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="../css/admin.css">
-    <link rel="stylesheet" href="../css/style2.css">
-    <link rel="stylesheet" href="../css/all.css">
-</head>
+        <link rel="stylesheet" href="../css/bootstrap.css">
+        <link rel="stylesheet" href="../css/admin.css">
+        <link rel="stylesheet" href="../css/style2.css">
+        <link rel="stylesheet" href="../css/all.css">
+    </head>
 
-<body>
-    <div class="wrapper">
-        <?php
+    <body>
+        <div class="wrapper">
+            <?php
     
     include('../blocks/sidenav.php');
     
     ?>
-        <div id="content">
+                <div id="content">
 
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Users</li>
-                </ol>
-            </nav>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </nav>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col col-sm-12">
-                        <div class="container">
-                            <div class="row">
-                                <h2>Users</h2>
-                                <a class="ml-4" href="#addUser" data-toggle="modal"><button class="btn btn-primary">Add User</button></a>
-                            </div>
-                        </div>
-                        <table id="usersTable" class="table table-striped">
-                            <thead>
-                                <th>ID</th>
-                                <th>Status</th>
-                                <th>Username</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Password</th>
-                                <th>Actions</th>
-                            </thead>
-                            <tbody>
-                                <?php
+
+                    <div class="row">
+                        <div class="col col-sm-12">
+
+
+                            <h2>Users</h2>
+                            <a class="ml-4 float-right" href="#addUser" data-toggle="modal"><button class="btn btn-primary">Add User</button></a>
+
+
+                            <table id="usersTable" class="table table-striped">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Status</th>
+                                    <th>Username</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Password</th>
+                                    <th>Actions</th>
+                                </thead>
+                                <tbody>
+                                    <?php
                                     displayUsers();
                                 ?>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <!--Modal-->
-                <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addAsset>Label" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addAssetModalLabel">Add Asset</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!--Modal-->
+                    <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addAsset>Label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addAssetModalLabel">Add Asset</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                            </div>
-                            <div class="modal-body">
-                               <form action="users.php" id="addUserForm" method="post">
-                                   <!-- <input type="hidden" name="addAssetReq" value="assetReq"> -->
+                                </div>
+                                <div class="modal-body">
+                                    <form action="users.php" id="addUserForm" method="post">
+                                        <!-- <input type="hidden" name="addAssetReq" value="assetReq"> -->
 
-                                    <div class="form-group">
-                                        <label for="name">First Name</label>
-                                        <input type="text" class="form-control" id="name" name="fname" placeholder="Enter first name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Last Name</label>
-                                        <input type="text" class="form-control" id="name" name="lname" placeholder="Enter last name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Username</label>
-                                        <input type="text" class="form-control" id="name" name="username" placeholder="Enter Username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">User Type</label>
-                                        <select name="user_type">
+                                        <div class="form-group">
+                                            <label for="name">First Name</label>
+                                            <input type="text" class="form-control" id="name" name="fname" placeholder="Enter first name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Last Name</label>
+                                            <input type="text" class="form-control" id="name" name="lname" placeholder="Enter last name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Username</label>
+                                            <input type="text" class="form-control" id="name" name="username" placeholder="Enter Username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">User Type</label>
+                                            <select name="user_type">
                                             <option value="" selected disabled>Select user type</option>
                                             <option value="admin">Admin</option>
                                             <option value="user">User</option>
                                         </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Password</label>
-                                        <input type="password" class="form-control" id="name" name="password1" placeholder="Enter password" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Confirm Password</label>
-                                        <input type="password" class="form-control" id="name" name="password2" placeholder="Re-enter password" required>
-                                    </div>
-                               </form>
-                                
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Password</label>
+                                            <input type="password" class="form-control" id="name" name="password1" placeholder="Enter password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Confirm Password</label>
+                                            <input type="password" class="form-control" id="name" name="password2" placeholder="Re-enter password" required>
+                                        </div>
+                                    </form>
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <input type="submit" form="addUserForm" class="btn btn-primary" value="Add" name="createUser">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <input type="submit" form="addUserForm" class="btn btn-primary" value="Add" name="createUser">
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
-            </div>
         </div>
-    </div>
 
 
-    <script>
-        $(document).ready(function() {
-            $("#usersTable").DataTable({
-                pageLength: 25,
-                lengthMenu: [5, 10, 25, 50, 100]
+        <script>
+            $(document).ready(function() {
+                $("#usersTable").DataTable({
+                    pageLength: 25,
+                    lengthMenu: [5, 10, 25, 50, 100]
+                });
             });
-        });
 
-    </script>
-</body>
+        </script>
+    </body>
 
-</html>
+    </html>

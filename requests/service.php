@@ -18,6 +18,12 @@ if (isAdmin()) {
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/formcenter.css">
     <link rel="stylesheet" href="../css/style2.css">
+    
+    <link rel="stylesheet" href="../css/jquery.mCustomScrollbar.min.css">
+
+    <script src="../js/fa-solid.js"></script>
+    <script defer src="../js/fontawesome.js"></script>
+    
 </head>
 
 <body>
@@ -29,6 +35,11 @@ if (isAdmin()) {
        <div id="content">
            
            <nav aria-label="breadcrumb">
+              
+               <button type="button" id="sidebarCollapse" class="btn btn-info float-left mr-2" style="padding: 0.65rem 1rem;">
+                   <i class="fas fa-align-left"></i>
+               </button>
+              
                <ol class="breadcrumb">
                    <li class="breadcrumb-item"><a href="type.php">Select Type</a></li>
                    <li class="breadcrumb-item disabled" aria-current="page">Create Request</li>
@@ -62,6 +73,26 @@ if (isAdmin()) {
 
     <script src="../js/jquery-3.3.1.slim.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
+    
+    <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+
+        });
+
+    </script>
 </body>
 
 </html>

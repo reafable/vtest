@@ -72,11 +72,9 @@ function moveRequestToInProgress(){
     
     $edit_req_id = $_POST['edit_req_id'];
     
-    $query = "UPDATE requests
-              SET
-              status='inprogress'
-              WHERE
-              id='$edit_req_id'";
+    $targetDate = date('Y-m-d', strtotime($_POST['targetDate']));
+    
+    $query = "UPDATE requests SET status='inprogress', actdate='$targetDate' WHERE id='$edit_req_id'";
     mysqli_query($db, $query);
 }
 
@@ -85,9 +83,12 @@ function moveRequestToCompleted(){
     
     $edit_req_id = $_POST['edit_req_id'];
     
+    $date = date('Y-m-d');
+    
     $query = "UPDATE requests
               SET
-              status='completed'
+              status='completed', 
+              findate='$date'
               WHERE
               id='$edit_req_id'";
     mysqli_query($db, $query);
@@ -702,6 +703,8 @@ function displayServicePending(){
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
+                "<label for='targetDate'>Target Completion Date</label>" .
+                "<input type='date' class='form-control' id='targetDate' name='targetDate' placeholder='Enter date' required>" .
                                                     //insert form here: target completion date
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -719,7 +722,7 @@ function displayServicePending(){
 
 function displayServiceInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, servdesc, postby FROM requests WHERE type='service' AND status='inprogress'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, servdesc, postby FROM requests WHERE type='service' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -735,6 +738,7 @@ function displayServiceInprogress(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $actdate = $row['actdate'];
             $servdesc = $row['servdesc'];
             echo
                 "<tr>" .
@@ -742,7 +746,7 @@ function displayServiceInprogress(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
-                "<td>" . "Placeholder" . "</td>".
+                "<td>" . $actdate . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -804,7 +808,7 @@ function displayServiceInprogress(){
 
 function displayAssetInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, assetdesc, postby FROM requests WHERE type='asset' AND status='inprogress'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, assetdesc, postby FROM requests WHERE type='asset' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -820,6 +824,7 @@ function displayAssetInprogress(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $actdate = $row['actdate'];
             $assetdesc = $row['assetdesc'];
             echo
                 "<tr>" .
@@ -827,6 +832,7 @@ function displayAssetInprogress(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -888,7 +894,7 @@ function displayAssetInprogress(){
 
 function displayServiceCompleted(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, servdesc, postby FROM requests WHERE type='service' AND status='completed'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, findate, servdesc, postby FROM requests WHERE type='service' AND status='completed'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -904,6 +910,8 @@ function displayServiceCompleted(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $actdate = $row['actdate'];
+            $findate = $row['findate'];
             $servdesc = $row['servdesc'];
             echo
                 "<tr>" .
@@ -911,6 +919,8 @@ function displayServiceCompleted(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
+                "<td>" . $findate . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -972,7 +982,7 @@ function displayServiceCompleted(){
 
 function displayAssetCompleted(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, assetdesc, postby FROM requests WHERE type='asset' AND status='completed'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, findate, assetdesc, postby FROM requests WHERE type='asset' AND status='completed'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -988,6 +998,8 @@ function displayAssetCompleted(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $actdate = $row['actdate'];
+            $findate = $row['findate'];
             $assetdesc = $row['assetdesc'];
             echo
                 "<tr>" .
@@ -995,6 +1007,8 @@ function displayAssetCompleted(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
+                "<td>" . $findate . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -1119,6 +1133,8 @@ function displayAssetPending(){
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
                                                     "<p>Assets Required: " . $assetdesc . "</p>" .
+                "<label for='targetDate'>Target Completion Date</label>" .
+                "<input type='date' class='form-control' id='targetDate' name='targetDate' placeholder='Enter date' required>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
                                                     "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .

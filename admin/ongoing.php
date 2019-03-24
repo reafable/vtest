@@ -8,102 +8,101 @@ if (!isAdmin()) {
 	header('location: ../login.php');
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Ongoing Requests</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ongoing Requests</title>
 
-    <script src="../js/jquery-3.3.1.min.js"></script>
+        <script src="../js/jquery-3.3.1.min.js"></script>
 
-    <script type="text/javascript" src="../js/datatables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
-    <script src="../js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="../js/datatables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
+        <script src="../js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="../css/admin.css">
-    <link rel="stylesheet" href="../css/style2.css">
-    <link rel="stylesheet" href="../css/all.css">
-</head>
+        <link rel="stylesheet" href="../css/bootstrap.css">
+        <link rel="stylesheet" href="../css/admin.css">
+        <link rel="stylesheet" href="../css/style2.css">
+        <link rel="stylesheet" href="../css/all.css">
+    </head>
 
-<body>
-    <div class="wrapper">
-        <?php
+    <body>
+        <div class="wrapper">
+            <?php
             include('../blocks/sidenav.php');
         ?>
 
-        <div id="content">
+                <div id="content">
 
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-                    <li class="breadcrumb-item disabled" aria-current="page">Requests</li>
-                    <li class="breadcrumb-item active" aria-current="page">Ongoing</li>
-                </ol>
-            </nav>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+                            <li class="breadcrumb-item disabled" aria-current="page">Requests</li>
+                            <li class="breadcrumb-item active" aria-current="page">Ongoing</li>
+                        </ol>
+                    </nav>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col col-sm-12">
-                        <h2>Service Requests</h2>
-                        <table id="serviceInProgressTable" class="table table-striped">
-                            <thead>
-                                <th>Customer Name</th>
-                                <th>Posted On</th>
-                                <th>Posted By</th>
-                                <th>Expected Completion</th>
-                                <th>Target Completion</th>
-                                <th>Service Description</th>
-                                <th>Actions</th>
-                            </thead>
-                            <tbody>
-                                <?php
+                    <div class="row">
+                        <div class="col col-sm-12">
+                            <h2>Service Requests</h2>
+                            <table id="serviceInProgressTable" class="table table-striped">
+                                <thead>
+                                    <th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Target Completion</th>
+                                    <th>Service Description</th>
+                                    <th>Actions</th>
+                                </thead>
+                                <tbody>
+                                    <?php
                                     displayServiceInprogress();
                                 ?>
-                            </tbody>
-                        </table>
+                                        s </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-5">
-                    <div class="col col-sm-12">
-                        <h2>Asset Requests</h2>
-                        <table id="assetInProgressTable" class="table table-striped">
-                            <thead>
-                                <th>Customer Name</th>
-                                <th>Posted On</th>
-                                <th>Posted By</th>
-                                <th>Expected Completion</th>
-                                <th>Assets Required</th>
-                                <th>Actions</th>
-                            </thead>
-                            <tbody>
-                                <?php
+                    <div class="row mt-5">
+                        <div class="col col-sm-12">
+                            <h2>Asset Requests</h2>
+                            <table id="assetInProgressTable" class="table table-striped">
+                                <thead>
+                                    <th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Target Completion</th>
+                                    <th>Assets Required</th>
+                                    <th>Actions</th>
+                                </thead>
+                                <tbody>
+                                    <?php
                                     displayAssetInProgress();
                                 ?>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
-            </div>
-
         </div>
-    </div>
 
 
-    <script>
-        $(document).ready(function() {
-            $("#serviceInProgressTable").DataTable({
-                pageLength: 5,
-                lengthMenu: [5, 10, 25, 50, 100]
+        <script>
+            $(document).ready(function() {
+                $("#serviceInProgressTable").DataTable({
+                    pageLength: 5,
+                    lengthMenu: [5, 10, 25, 50, 100]
+                });
+                $("#assetInProgressTable").DataTable({
+                    pageLength: 5,
+                    lengthMenu: [5, 10, 25, 50, 100]
+                });
             });
-            $("#assetInProgressTable").DataTable({
-                pageLength: 5,
-                lengthMenu: [5, 10, 25, 50, 100]
-            });
-        });
 
-    </script>
-</body>
+        </script>
+    </body>
 
-</html>
+    </html>

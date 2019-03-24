@@ -43,7 +43,7 @@ if (!isAdmin()) {
                 </ol>
             </nav>
 
-            <div class="container">
+           
                 <div class="row">
                     <div class="col col-sm-12">
                         <h2>Service Requests</h2>
@@ -53,6 +53,8 @@ if (!isAdmin()) {
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
+                                <th>Target Completion</th>
+                                <th>Actual Completion</th>
                                 <th>Service Description</th>
                                 <th>Actions</th>
                             </thead>
@@ -73,6 +75,8 @@ if (!isAdmin()) {
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
+                                <th>Target Completion</th>
+                                <th>Actual Completion</th>
                                 <th>Assets Required</th>
                                 <th>Actions</th>
                             </thead>
@@ -84,7 +88,7 @@ if (!isAdmin()) {
                         </table>
                     </div>
                 </div>
-            </div>
+          
 
         </div>
     </div>

@@ -43,7 +43,7 @@ if (!isAdmin()) {
                 </ol>
             </nav>
 
-            <div class="container">
+           
                 <div class="row">
                     <div class="col col-sm-12">
                         <h2>Service Requests</h2>
@@ -95,7 +95,7 @@ if (!isAdmin()) {
                         </table>
                     </div>
                 </div>
-            </div>
+            
         </div>
     </div>
 
