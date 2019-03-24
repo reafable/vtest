@@ -104,6 +104,8 @@ function postServiceRequest(){
     
     $date = date('Y-m-d');
     
+    //$date = date('m-d-Y');
+    
     $uid = date('Ymd-His');
     
     $_SESSION['uid'] = "SR-" . $uid;
