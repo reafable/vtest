@@ -33,6 +33,14 @@
                         <option>4</option>
                         <option>5</option>
                     </select>
+                    
+                    <?php
+                    
+                    $date = date('YmdHis');
+                    
+                    echo "$date";
+                    
+                    ?>
                 </div>
             </div>
 

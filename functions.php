@@ -133,6 +133,10 @@ function postAssetRequest(){
     
     $date = date('Y-m-d');
     
+    $uid = date('YmdHis');
+    
+    $_SESSION['uid'] = $uid;
+    
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user']['username'];
     }
@@ -149,9 +153,9 @@ function postAssetRequest(){
     }
     
     $query = "INSERT INTO requests 
-              (id, type, custname, postdate, compdate, assetdesc, postby, status) 
+              (id, uid, type, custname, postdate, compdate, assetdesc, postby, status) 
               VALUES 
-              (NULL, 'asset', '$custname', '$postdate', '$compdate', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
+              (NULL, '$uid', 'asset', '$custname', '$postdate', '$compdate', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
 }

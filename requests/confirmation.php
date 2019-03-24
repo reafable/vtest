@@ -17,7 +17,11 @@ if (isAdmin()) {
 <body>
     <?php
     
-    echo "Request posted.";
+    if(isset($_SESSION['uid'])){
+        $uid = $_SESSION['uid'];
+        
+        echo $uid;
+    }
     
     ?>
 </body>
