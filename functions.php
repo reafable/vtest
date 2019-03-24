@@ -104,6 +104,10 @@ function postServiceRequest(){
     
     $date = date('Y-m-d');
     
+    $uid = date('Ymd-His');
+    
+    $_SESSION['uid'] = "SR-" . $uid;
+    
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user']['username'];
     }
@@ -114,9 +118,9 @@ function postServiceRequest(){
     $servdesc = e($_POST['servdesc']);
     
     $query = "INSERT INTO requests 
-              (id, type, custname, postdate, compdate, servdesc, postby, status) 
+              (id, 'uid', type, custname, postdate, compdate, servdesc, postby, status) 
               VALUES 
-              (NULL, 'service', '$custname', '$postdate', '$compdate', '$servdesc', '$user', 'pooled')";
+              (NULL, '$uid', 'service', '$custname', '$postdate', '$compdate', '$servdesc', '$user', 'pooled')";
     
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
@@ -133,9 +137,9 @@ function postAssetRequest(){
     
     $date = date('Y-m-d');
     
-    $uid = date('YmdHis');
+    $uid = date('Ymd-His');
     
-    $_SESSION['uid'] = $uid;
+    $_SESSION['uid'] = "AR-" . $uid;
     
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user']['username'];
