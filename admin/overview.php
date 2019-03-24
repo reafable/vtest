@@ -25,6 +25,11 @@ if (!isAdmin()) {
         <link rel="stylesheet" href="../css/admin.css">
         <link rel="stylesheet" href="../css/style2.css">
         <link rel="stylesheet" href="../css/all.css">
+        
+        <link rel="stylesheet" href="../css/jquery.mCustomScrollbar.min.css">
+
+        <script src="../js/fa-solid.js"></script>
+        <script defer src="../js/fontawesome.js"></script>
     </head>
 
     <body>
@@ -35,6 +40,11 @@ if (!isAdmin()) {
                 <div id="content">
 
                     <nav aria-label="breadcrumb">
+                       
+                        <button type="button" id="sidebarCollapse" class="btn btn-info float-left mr-2" style="padding: 0.65rem 1rem;">
+                            <i class="fas fa-align-left"></i>
+                        </button>
+                       
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="home.php">Home</a></li>
                             <li class="breadcrumb-item disabled" aria-current="page">Requests</li>
@@ -105,12 +115,25 @@ if (!isAdmin()) {
 
                 </div>
         </div>
+        
+        <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+        
         <script>
             $(document).ready(function() {
                 $("#assetsTable").DataTable({
                     //pageLength: 25,
                     //scrollY: 550,
                     //scrollCollapse: true
+                });
+                
+                $("#sidebar").mCustomScrollbar({
+                    theme: "minimal"
+                });
+
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar, #content').toggleClass('active');
+                    $('.collapse.in').toggleClass('in');
+                    $('a[aria-expanded=true]').attr('aria-expanded', 'false');
                 });
             });
 
