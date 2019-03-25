@@ -13,7 +13,7 @@ if (isAdmin()) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Hello, <?php displayCurrentUser(); ?></title>
 
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/formcenter.css">
@@ -110,6 +110,19 @@ if (isAdmin()) {
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
+            
+            var today = new Date();
+            var yyyy = today.getFullYear();
+            var mm = today.getMonth()+1;
+            var dd = today.getDate();
+            if(mm < 10){
+                mm = '0' + mm
+            }
+            if(dd < 10){
+                dd = '0'+ dd
+            }
+            today = yyyy+'-'+mm+'-'+dd;
+            document.getElementById("").setAttribute("min", today);
 
         });
         

@@ -173,6 +173,25 @@ if (!isAdmin()) {
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
+            
+            var today = new Date();
+            var yyyy = today.getFullYear();
+            var mm = today.getMonth()+1;
+            var dd = today.getDate();
+            if(mm < 10){
+                mm = '0' + mm
+            }
+            if(dd < 10){
+                dd = '0'+ dd
+            }
+            today = yyyy+'-'+mm+'-'+dd;
+            if($("#targetDateAsset").length){
+                document.getElementById("targetDateAsset").setAttribute("min", today);
+            }
+            if($("#targetDateService").length){
+                document.getElementById("targetDateService").setAttribute("min", today);
+            }
+            
         });
 
     </script>

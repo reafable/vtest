@@ -21,6 +21,11 @@ if(isset($_POST['reject'])){
     header('location: ' . $_SERVER['PHP_SELF']);
 }
 
+if(isset($_POST['mpending'])){
+    moveRequestToPending();
+    header('location: ' . $_SERVER['PHP_SELF']);
+}
+
 if(isset($_POST['minprogress'])){
     moveRequestToInProgress();
     header('location: ' . $_SERVER['PHP_SELF']);
@@ -64,6 +69,15 @@ function rejectRequest(){
               status='rejected'
               WHERE
               id='$reject_req_id'";
+    mysqli_query($db, $query);
+}
+
+function moveRequestToPending(){
+    global $db;
+    
+    $edit_req_id = $_POST['edit_req_id'];
+    
+    $query = "UPDATE requests SET status='pending' WHERE id='$edit_req_id'";
     mysqli_query($db, $query);
 }
 
@@ -121,9 +135,9 @@ function postServiceRequest(){
     $servdesc = e($_POST['servdesc']);
     
     $query = "INSERT INTO requests 
-              (id, uid, type, custname, postdate, compdate, servdesc, postby, status) 
+              (id, uid, type, custname, postdate, compdate, servdesc, assetdesc, postby, status) 
               VALUES 
-              (NULL, '" . $_SESSION['uid'] . "', 'service', '$custname', '$postdate', '$compdate', '$servdesc', '$user', 'pooled')";
+              (NULL, '" . $_SESSION['uid'] . "', 'service', '$custname', '$postdate', '$compdate', '$servdesc', 'N/A', '$user', 'pooled')";
     
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
@@ -160,9 +174,9 @@ function postAssetRequest(){
     }
     
     $query = "INSERT INTO requests 
-              (id, uid, type, custname, postdate, compdate, assetdesc, postby, status) 
+              (id, uid, type, custname, postdate, compdate, servdesc, assetdesc, postby, status) 
               VALUES 
-              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
+              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', 'N/A', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
 }
@@ -362,13 +376,13 @@ function isAdmin(){
 
 function displayRequests(){
     global $db;
-    $query = "SELECT id, type, custname, postdate, compdate, postby, status from requests";
+    $query = "SELECT uid, type, custname, postdate, compdate, postby, status from requests";
     $results = mysqli_query($db, $query);
     
     if($results-> num_rows > 0){
         while($row = mysqli_fetch_assoc($results)){
             
-            $id = $row['id'];
+            $uid = $row['uid'];
             $type = $row['type'];
             $custname = $row['custname'];
             $postdate = $row['postdate'];
@@ -378,7 +392,7 @@ function displayRequests(){
             
             echo
                 "<tr>" .
-                "<td>" . $id . "</td>" .
+                "<td>" . $uid . "</td>" .
                 "<td>" . $type . "</td>" .
                 "<td>" . $custname . "</td>" .
                 "<td>" . $postdate . "</td>" .
@@ -394,22 +408,29 @@ function displayRequests(){
 //pull data from users table
 function displayUsers(){
     global $db;
-    $query = "SELECT id, status, username, fname, lname, password FROM users";
+    $query = "SELECT id, status, username, fname, lname, password, user_type FROM users";
     $results = mysqli_query($db, $query);
     
     if($results-> num_rows > 0){
         while($row = mysqli_fetch_assoc($results)){
             
             $id = $row['id'];
+            $fname = $row['fname'];
+            $lname = $row['lname'];
+            $username = $row['username'];
+            $user_type = $row['user_type'];
+            $status = $row['status'];
+            $password = $row['password'];
             
             echo
                 "<tr>" .
-                "<td>" . $row['id'] . "</td>" . 
-                "<td>" . $row['status'] . "</td>" .
-                "<td>" . $row['username'] . "</td>" .
+                //"<td>" . $row['id'] . "</td>" . 
                 "<td>" . $row['fname'] . "</td>" .
                 "<td>" . $row['lname'] . "</td>" .
-                "<td>" . $row['password'] . "</td>" .
+                "<td>" . $row['username'] . "</td>" .
+                "<td>" . $row['user_type'] . "</td>" .
+                "<td>" . $row['status'] . "</td>" .
+                //"<td>" . $row['password'] . "</td>" .
                 "<td>" . 
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>".
@@ -440,16 +461,19 @@ function displayUsers(){
                                            "<form method='post'>" .
                                                 "<div class='modal-content'>" .
                                                 "<div class='modal-header'>" .
-                                                    "<h5 class='modal-title id='editModalLabel'>Asset Details</h5>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>User Details</h5>" .
                                                     "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
                                                         "<span aria-hidden='true'>&times;</span>" .
                                                     "</button>" .
                                                 "</div>" .
                                                 "<div class='modal-body'>" .
                                                     "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
-                                                    "<p>ID: </p>" .
-                                                    "<p>Name: </p>" .
-                                                    "<p>Description: </p>" .
+                                                    "<p>First Name: " . $fname . "</p>" .
+                                                    "<p>Last Name: " . $lname . "</p>" .
+                                                    "<p>Username: " . $username . "</p>" .
+                                                    "<p>User Type: " . $user_type . "</p>" .
+                                                    "<p>Status: " . $status . "</p>" .
+                                                    "<p>Password: " . $password . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
                                                     "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
@@ -704,7 +728,7 @@ function displayServicePending(){
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                 "<label for='targetDate'>Target Completion Date</label>" .
-                "<input type='date' class='form-control' id='targetDate' name='targetDate' placeholder='Enter date' required>" .
+                "<input type='date' class='form-control' id='targetDateService' name='targetDate' placeholder='Enter date' required>" .
                                                     //insert form here: target completion date
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -791,6 +815,7 @@ function displayServiceInprogress(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -1134,7 +1159,7 @@ function displayAssetPending(){
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
                                                     "<p>Assets Required: " . $assetdesc . "</p>" .
                 "<label for='targetDate'>Target Completion Date</label>" .
-                "<input type='date' class='form-control' id='targetDate' name='targetDate' placeholder='Enter date' required>" .
+                "<input type='date' class='form-control' id='targetDateAsset' name='targetDate' placeholder='Enter date' required>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
                                                     "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
@@ -1307,9 +1332,9 @@ function displayAssets(){
   
             echo 
                 "<tr>" .
-                "<td>" . $id . "</td>".
+                //"<td>" . $id . "</td>".
                 "<td>" . $name . "</td>".
-                "<td>" . $description . "</td>".
+                "<td>" . $description . "</td>"/*.
                 "<td>" . 
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
@@ -1358,7 +1383,7 @@ function displayAssets(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>";
+                                    "</div>"*/;
         }
     }
 }
@@ -1437,6 +1462,7 @@ function populateAssetSelect(){
     $query = "SELECT name FROM assets";
     $results = mysqli_query($db, $query);
     
+    echo "<option value='' selected disabled>Select an asset</option>";
     if($results-> num_rows > 0){
         while($row = mysqli_fetch_array($results)){
             echo "<option value='" . $row[0] . "'>" . $row[0] . "</option>";

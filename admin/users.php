@@ -64,12 +64,13 @@ if (!isAdmin()) {
 
                             <table id="usersTable" class="table table-striped">
                                 <thead>
-                                    <th>ID</th>
-                                    <th>Status</th>
-                                    <th>Username</th>
+                                    <!-- <th>ID</th> -->
                                     <th>First Name</th>
                                     <th>Last Name</th>
-                                    <th>Password</th>
+                                    <th>Username</th>
+                                    <th>User Type</th>
+                                    <th>Status</th>
+                                    <!-- <th>Password</th> -->
                                     <th>Actions</th>
                                 </thead>
                                 <tbody>
@@ -85,7 +86,7 @@ if (!isAdmin()) {
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="addAssetModalLabel">Add Asset</h5>
+                                    <h5 class="modal-title" id="addAssetModalLabel">Add User</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -108,7 +109,7 @@ if (!isAdmin()) {
                                         </div>
                                         <div class="form-group">
                                             <label for="name">User Type</label>
-                                            <select name="user_type">
+                                            <select class="form-control" name="user_type" required>
                                             <option value="" selected disabled>Select user type</option>
                                             <option value="admin">Admin</option>
                                             <option value="user">User</option>

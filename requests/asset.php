@@ -23,7 +23,6 @@ if (isAdmin()) {
         <link rel="stylesheet" href="../css/formcenter.css">
         <link rel="stylesheet" href="../css/style2.css">
         
-        <link rel="stylesheet" href="../css/jquery.mCustomScrollbar.min.css">
 
         <script src="../js/fa-solid.js"></script>
         <script defer src="../js/fontawesome.js"></script>
@@ -31,6 +30,7 @@ if (isAdmin()) {
         <link href="../css/select2.min.css" rel="stylesheet">
         <script src="../js/select2.full.min.js"></script>
 
+        <link rel="stylesheet" href="../css/jquery.mCustomScrollbar.min.css">
 
     </head>
 
@@ -73,7 +73,7 @@ if (isAdmin()) {
                                    <div class="col">
 
                                        <label for="assetdesc">Asset</label>
-                                       <select class="form-control srselect" name="assetdesc[]">
+                                       <select class="form-control srselect" name="assetdesc[]" required>
 
                                            <?php
 
@@ -113,13 +113,14 @@ if (isAdmin()) {
         
         <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
         
-        <script>
+        <script type="text/javascript">
+            
             $(document).ready(function() {
                 $('.srselect').select2();
                 $('#addMoreAssets').click(function(e) {
                     var pop = "<?php populateAssetSelect(); ?>";
                     e.preventDefault();
-                    $("#assetSelect").append("<div class='form-row'> <div class='col'> <label for='assetdesc'>Asset</label> <select class='form-control srselect' name='assetdesc[]'>" + pop + "</select> </div> <div class='col'> <label for='qty'>Quantity</label> <input type='text' class='form-control' name='assetQuantity[]' placeholder='Enter asset quantity' required> </div> </div>");
+                    $("#assetSelect").append("<div class='form-row'> <div class='col'> <label for='assetdesc'>Asset</label> <select class='form-control srselect' name='assetdesc[]' required>" + pop + "</select> </div> <div class='col'> <label for='qty'>Quantity</label> <input type='text' class='form-control' name='assetQuantity[]' placeholder='Enter asset quantity' required> </div> </div>");
                     $('.srselect').select2();
                 });
                 
@@ -132,9 +133,20 @@ if (isAdmin()) {
                     $('.collapse.in').toggleClass('in');
                     $('a[aria-expanded=true]').attr('aria-expanded', 'false');
                 });
-            })
-
+                
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                var mm = today.getMonth()+1;
+                var dd = today.getDate();
+                if(mm < 10){
+                    mm = '0' + mm
+                }
+                if(dd < 10){
+                    dd = '0'+ dd
+                }
+                today = yyyy+'-'+mm+'-'+dd;
+                document.getElementById("compdate").setAttribute("min", today);
+            });
         </script>
     </body>
-
     </html>

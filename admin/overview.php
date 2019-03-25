@@ -64,7 +64,7 @@ if (!isAdmin()) {
 
                             <table id="assetsTable" class="table table-striped">
                                 <thead>
-                                    <th>ID</th>
+                                    <th>Request ID</th>
                                     <th>Type</th>
                                     <th>Customer Name</th>
                                     <th>Posted On</th>

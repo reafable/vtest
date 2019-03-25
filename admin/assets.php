@@ -63,10 +63,10 @@ if (!isAdmin()) {
 
                             <table id="assetsTable" class="table table-striped">
                                 <thead>
-                                    <th>ID</th>
+                                    <!-- <th>ID</th> -->
                                     <th>Name</th>
                                     <th>Description</th>
-                                    <th>Actions</th>
+                                    <!-- <th>Actions</th> -->
                                 </thead>
                                 <tbody>
                                     <?php
