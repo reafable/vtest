@@ -133,11 +133,12 @@ function postServiceRequest(){
     $postdate = $date;
     $compdate = e($_POST['compdate']);
     $servdesc = e($_POST['servdesc']);
+    $serv_type = e($_POST['serv_type']);
     
     $query = "INSERT INTO requests 
-              (id, uid, type, custname, postdate, compdate, servdesc, assetdesc, postby, status) 
+              (id, uid, type, custname, postdate, compdate, servdesc, serv_type, assetdesc, postby, status) 
               VALUES 
-              (NULL, '" . $_SESSION['uid'] . "', 'service', '$custname', '$postdate', '$compdate', '$servdesc', 'N/A', '$user', 'pooled')";
+              (NULL, '" . $_SESSION['uid'] . "', 'service', '$custname', '$postdate', '$compdate', '$servdesc', '$serv_type', 'N/A', '$user', 'pooled')";
     
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
@@ -174,9 +175,9 @@ function postAssetRequest(){
     }
     
     $query = "INSERT INTO requests 
-              (id, uid, type, custname, postdate, compdate, servdesc, assetdesc, postby, status) 
+              (id, uid, type, custname, postdate, compdate, servdesc, serv_type, assetdesc, postby, status) 
               VALUES 
-              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', 'N/A', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
+              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', 'N/A', 'N/A', '" . implode(', ', $insertVal) . "', '$user', 'pooled')";
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
 }
@@ -445,6 +446,38 @@ function toggleUserStatus(){
     }
 }
 
+if(isset($_POST['toggle'])){
+
+    addAssetStock();
+
+    header('location: ' . $_SERVER['PHP_SELF']);
+}
+
+
+function addAssetStock(){
+    global $db;
+    
+    $toggle_req_id = $_POST['toggle_req_id'];
+    
+    $query = "SELECT stock FROM assets WHERE id='$toggle_req_id'";
+    $results = mysqli_query($db, $query);
+    
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_assoc($results))
+            
+            $stock = $row['stock'];
+        
+        if($status == "active"){
+            $query = "UPDATE users SET status='inactive' WHERE id='$toggle_req_id'";
+            mysqli_query($db, $query);
+        }
+        if($status == "inactive"){
+            $query = "UPDATE users SET status='active' WHERE id='$toggle_req_id'";
+            mysqli_query($db, $query);
+        }
+    }
+}
+
 //pull data from users table
 function displayUsers(){
     global $db;
@@ -533,7 +566,7 @@ function displayUsers(){
 // pull pooled service requests from requests table
 function displayServicePooled(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, servdesc, postby FROM requests WHERE type='service' AND status='pooled'";
+    $query = "SELECT id, custname, postdate, compdate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='pooled'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -549,6 +582,7 @@ function displayServicePooled(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
             echo
                 "<tr>" .
@@ -556,6 +590,7 @@ function displayServicePooled(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -600,6 +635,7 @@ function displayServicePooled(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Service Type: " . $serv_type . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -701,7 +737,7 @@ function displayAssetPooled(){
 
 function displayServicePending(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, servdesc, postby FROM requests WHERE type='service' AND status='pending'";
+    $query = "SELECT id, custname, postdate, compdate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='pending'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -717,6 +753,7 @@ function displayServicePending(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
             echo
                 "<tr>" .
@@ -724,6 +761,7 @@ function displayServicePending(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -768,6 +806,7 @@ function displayServicePending(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Service Type: " . $serv_type . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                 "<label for='targetDate'>Target Completion Date</label>" .
                 "<input type='date' class='form-control' id='targetDateService' name='targetDate' placeholder='Enter date' required>" .
@@ -788,7 +827,7 @@ function displayServicePending(){
 
 function displayServiceInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, servdesc, postby FROM requests WHERE type='service' AND status='inprogress'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -805,6 +844,7 @@ function displayServiceInprogress(){
             $postby = $row['postby'];
             $compdate = $row['compdate'];
             $actdate = $row['actdate'];
+            $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
             echo
                 "<tr>" .
@@ -813,6 +853,7 @@ function displayServiceInprogress(){
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
+                "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -858,6 +899,7 @@ function displayServiceInprogress(){
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
                                                     "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Service Type: " . $serv_type . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -944,6 +986,7 @@ function displayAssetInprogress(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
                                                     "<p>Service Description: " . $assetdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -961,7 +1004,7 @@ function displayAssetInprogress(){
 
 function displayServiceCompleted(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, findate, servdesc, postby FROM requests WHERE type='service' AND status='completed'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, findate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='completed'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -979,6 +1022,7 @@ function displayServiceCompleted(){
             $compdate = $row['compdate'];
             $actdate = $row['actdate'];
             $findate = $row['findate'];
+            $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
             echo
                 "<tr>" .
@@ -988,6 +1032,7 @@ function displayServiceCompleted(){
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
                 "<td>" . $findate . "</td>".
+                "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -1034,6 +1079,7 @@ function displayServiceCompleted(){
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
                                                     "<p>Target Completion: " . $actdate . "</p>" .
                                                     "<p>Actual Completion: " . $findate . "</p>" .
+                                                    "<p>Service Description: " . $serv_type . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -1367,7 +1413,7 @@ function displayAssetRejected(){
 
 function displayAssets(){
      global $db;
-    $query = "SELECT id, name, description FROM assets";
+    $query = "SELECT id, name, description, stock FROM assets";
     $results = mysqli_query($db, $query);
     
     if($results-> num_rows > 0){
@@ -1375,12 +1421,14 @@ function displayAssets(){
             $id = $row['id'];
             $name = $row['name'];
             $description = $row['description'];
+            $stock = $row['stock'];
   
             echo 
                 "<tr>" .
                 //"<td>" . $id . "</td>".
                 "<td>" . $name . "</td>".
-                "<td>" . $description . "</td>"/*.
+                "<td>" . $description . "</td>" .
+                "<td>" . $stock . "</td>" .
                 "<td>" . 
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
@@ -1429,7 +1477,7 @@ function displayAssets(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"*/;
+                                    "</div>";
         }
     }
 }
@@ -1778,6 +1826,19 @@ function populateAssetSelect(){
     $results = mysqli_query($db, $query);
     
     echo "<option value='' selected disabled>Select an asset</option>";
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_array($results)){
+            echo "<option value='" . $row[0] . "'>" . $row[0] . "</option>";
+        }
+    }
+}
+
+function populateServiceSelect(){
+    global $db;
+    $query = "SELECT name FROM services";
+    $results = mysqli_query($db, $query);
+    
+    echo "<option value='' selected disabled>Select a service</option>";
     if($results-> num_rows > 0){
         while($row = mysqli_fetch_array($results)){
             echo "<option value='" . $row[0] . "'>" . $row[0] . "</option>";

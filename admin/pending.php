@@ -62,6 +62,7 @@ if (!isAdmin()) {
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
+                                <th>Service Type</th>
                                 <th>Service Description</th>
                                 <th>Actions</th>
                             </thead>

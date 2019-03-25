@@ -14,6 +14,9 @@ if (isAdmin()) {
 <head>
     <meta charset="UTF-8">
     <title>Requests | Service</title>
+    
+    <script src="../js/jquery-3.3.1.slim.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../css/formcenter.css">
@@ -23,6 +26,9 @@ if (isAdmin()) {
 
     <script src="../js/fa-solid.js"></script>
     <script defer src="../js/fontawesome.js"></script>
+    
+    <link href="../css/select2.min.css" rel="stylesheet">
+    <script src="../js/select2.full.min.js"></script>
     
 </head>
 
@@ -59,6 +65,14 @@ if (isAdmin()) {
                            <input type="date" class="form-control" id="compdate" name="compdate" placeholder="Enter date" required>
                        </div>
                        <div class="form-group">
+                           <label for="servtype">Service Type</label>
+                           <select name="serv_type" id="serv_type" class="form-control srselect" required>
+                               
+                               <?php populateServiceSelect(); ?>
+                               
+                           </select>
+                       </div>
+                       <div class="form-group">
                            <label for="servicetext">Service Description</label>
                            <textarea class="form-control" id="servdesc" name="servdesc" rows="4" placeholder="Brief description of service" required></textarea>
                        </div>
@@ -70,15 +84,14 @@ if (isAdmin()) {
        </div>
        
    </div>
-
-    <script src="../js/jquery-3.3.1.slim.min.js"></script>
-    <script src="../js/bootstrap.bundle.min.js"></script>
     
     <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <script type="text/javascript">
 
         $(document).ready(function () {
+            
+            $('.srselect').select2();
 
             $("#sidebar").mCustomScrollbar({
                 theme: "minimal"
