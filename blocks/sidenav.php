@@ -16,6 +16,9 @@
             <!-- <ul class="collapse list-unstyled" id="homeSubmenu"> -->
             <ul class="list-unstyled" id="homeSubmenu">
                 <li>
+                    <a href="overview.php">Overview</a>
+                </li>
+                <li>
                     <a href="pool.php">Pool</a>
                 </li>
                 <li>
@@ -31,7 +34,7 @@
                     <a href="rejected.php">Rejected</a>
                 </li>
                 <li>
-                    <a href="overview.php">Overview</a>
+                    <a href="reports.php">Reports</a>
                 </li>
             </ul>
         </li>

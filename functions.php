@@ -1388,6 +1388,204 @@ function displayAssets(){
     }
 }
 
+function displayCountAllFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2')";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountPoolFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND status='pooled'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountPendingFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND status='pending'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountInProgressFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND status='inprogress'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountCompletedFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND status='completed'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountRejectedFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND status='rejected'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
 // pull number of pooled requests
 function displayCountPooled(){
     global $db;
