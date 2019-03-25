@@ -405,6 +405,46 @@ function displayRequests(){
     }
 }
 
+if(isset($_POST['toggle'])){
+    
+    toggleUserStatus();
+
+    header('location: ' . $_SERVER['PHP_SELF']);
+}
+
+/*function moveRequestToPending(){
+    global $db;
+
+    $edit_req_id = $_POST['edit_req_id'];
+
+    $query = "UPDATE requests SET status='pending' WHERE id='$edit_req_id'";
+    mysqli_query($db, $query);
+}*/
+
+function toggleUserStatus(){
+    global $db;
+    
+    $toggle_req_id = $_POST['toggle_req_id'];
+    
+    $query = "SELECT status FROM users WHERE id='$toggle_req_id'";
+    $results = mysqli_query($db, $query);
+    
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_assoc($results))
+            
+            $status = $row['status'];
+        
+        if($status == "active"){
+            $query = "UPDATE users SET status='inactive' WHERE id='$toggle_req_id'";
+            mysqli_query($db, $query);
+        }
+        if($status == "inactive"){
+            $query = "UPDATE users SET status='active' WHERE id='$toggle_req_id'";
+            mysqli_query($db, $query);
+        }
+    }
+}
+
 //pull data from users table
 function displayUsers(){
     global $db;
@@ -432,9 +472,11 @@ function displayUsers(){
                 "<td>" . $row['status'] . "</td>" .
                 //"<td>" . $row['password'] . "</td>" .
                 "<td>" . 
+                "<a href='#toggle" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Toggle Status</button></a>" . 
+                " " .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>".
-                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                "<div class='modal fade' id='toggle" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
                                         "<div class='modal-dialog' role='document'>" .
                                            "<form method='post'>" .
                                                 "<div class='modal-content'>" .
@@ -445,12 +487,12 @@ function displayUsers(){
                                                     "</button>" .
                                                 "</div>" .
                                                 "<div class='modal-body'>" .
-                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
-                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to toggle ". $username ."'s status?</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
                                                     "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
-                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='toggle'>Toggle</button>" .
                                                 "</div>" .
                                             "</div>" .
                                            "</form>" .
@@ -990,6 +1032,8 @@ function displayServiceCompleted(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Actual Completion: " . $findate . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -1078,6 +1122,8 @@ function displayAssetCompleted(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Actual Completion: " . $findate . "</p>" .
                                                     "<p>Assets Required: " . $assetdesc . "</p>" .
                                                 "</div>" .
                                                 "<div class='modal-footer'>" .
@@ -1421,6 +1467,41 @@ function displayCountAllFromTo(){
      
 }
 
+function displayCountAllFromToValue(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2')";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            //echo $total; 
+
+        }
+        
+        return $total;
+        
+    }
+     
+}
+
 function displayCountPoolFromTo(){
     global $db;
     
@@ -1553,6 +1634,41 @@ function displayCountCompletedFromTo(){
      
 }
 
+function displayCountCompletedFromToValue(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND status='completed'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            //echo $total; 
+
+        }
+        
+        return $total;
+        
+    }
+     
+}
+
 function displayCountRejectedFromTo(){
     global $db;
     
@@ -1585,6 +1701,7 @@ function displayCountRejectedFromTo(){
     }
      
 }
+
 
 // pull number of pooled requests
 function displayCountPooled(){

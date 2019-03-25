@@ -77,22 +77,27 @@ if (!isAdmin()) {
                 </form>
 
                 <div class="jumbotron">
-                    <p>Total requests: <?php displayCountAllFromTo(); ?></p>
-                    <p>Pooled requests: <?php displayCountPoolFromTo(); ?></p>
-                    <p>Pending requests: <?php displayCountPendingFromTo(); ?></p>
-                    <p>Ongoing requests: <?php displayCountInProgressFromTo(); ?></p>
-                    <p>Completed requests: <?php displayCountCompletedFromTo(); ?></p>
-                    <p>Rejected requests: <?php displayCountRejectedFromTo(); ?></p>
+                    <h2>Summary of Requests</h2>
+                    <p class="text-dark">From: <?php if(isset($_POST['dateRange1'])){ $d1=$_POST['dateRange1']; echo $d1;} ?></p>
+                    <p class="text-dark">To: <?php if(isset($_POST['dateRange2'])){ $d2=$_POST['dateRange2']; echo $d2;} ?></p>
+                    <hr class="my-4">
+                    <p class="text-dark">Total requests: <?php displayCountAllFromTo(); ?></p>
+                    <p class="text-dark">Pooled requests: <?php displayCountPoolFromTo(); ?></p>
+                    <p class="text-dark">Pending requests: <?php displayCountPendingFromTo(); ?></p>
+                    <p class="text-dark">Ongoing requests: <?php displayCountInProgressFromTo(); ?></p>
+                    <p class="text-dark">Completed requests: <?php displayCountCompletedFromTo(); ?></p>
+                    <p class="text-dark">Rejected requests: <?php displayCountRejectedFromTo(); ?></p>
+                    
                     <h1 class="display-2 text-success">
 
                         
 
                     </h1>
-                    <p class="lead">Hello. Goodbye. Genevieve.</p>
-                    <hr class="my-4">
+                    <!-- <p class="lead">Hello. Goodbye. Genevieve.</p> -->
+                    <!-- <hr class="my-4">
                     <p class="lead">
                         <a class="btn btn-primary btn-lg" href="" role="button">OK</a>
-                    </p>
+                    </p> -->
                 </div>
 
 
