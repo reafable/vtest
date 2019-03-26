@@ -41,7 +41,7 @@ if (isAdmin()) {
           <?php include('../blocks/sidenav_u.php'); ?>
           
            <div id="content">
-               <div class="container">
+               
                    
                        <nav aria-label="breadcrumb">
                           
@@ -103,7 +103,6 @@ if (isAdmin()) {
                            <button type="submit" class="btn btn-primary" name="submitar">Submit</button>
                        </form>
                    </div>
-               </div>
            </div>
        </div>
        

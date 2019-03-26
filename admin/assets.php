@@ -66,8 +66,8 @@ if (!isAdmin()) {
                                     <!-- <th>ID</th> -->
                                     <th>Name</th>
                                     <th>Description</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
+                                    <!-- <th>Stock</th> -->
+                                    <!-- <th>Actions</th> -->
                                 </thead>
                                 <tbody>
                                     <?php

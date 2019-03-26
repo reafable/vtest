@@ -96,16 +96,16 @@ if (!isAdmin()) {
                                         <!-- <input type="hidden" name="addAssetReq" value="assetReq"> -->
 
                                         <div class="form-group">
-                                            <label for="name">First Name</label>
-                                            <input type="text" class="form-control" id="name" name="fname" placeholder="Enter first name" required>
+                                            <label for="fname">First Name</label>
+                                            <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter first name" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="name">Last Name</label>
-                                            <input type="text" class="form-control" id="name" name="lname" placeholder="Enter last name" required>
+                                            <label for="lname">Last Name</label>
+                                            <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter last name" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="name">Username</label>
-                                            <input type="text" class="form-control" id="name" name="username" placeholder="Enter Username" required>
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="name">User Type</label>
@@ -117,11 +117,11 @@ if (!isAdmin()) {
                                         </div>
                                         <div class="form-group">
                                             <label for="name">Password</label>
-                                            <input type="password" class="form-control" id="name" name="password1" placeholder="Enter password" required>
+                                            <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="name">Confirm Password</label>
-                                            <input type="password" class="form-control" id="name" name="password2" placeholder="Re-enter password" required>
+                                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Re-enter password" required>
                                         </div>
                                     </form>
 
