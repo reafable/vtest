@@ -317,7 +317,7 @@ function login(){
 
 	// grab form values
 	$username = e($_POST['username']);
-	$password = e($_POST['password']);
+	$password = e(md5($_POST['password']));
 
 	// check if form is complete
 	if (empty($username)) {
@@ -338,6 +338,12 @@ function login(){
 			// check if user is admin or not
 			$logged_in_user = mysqli_fetch_assoc($results);
 			if ($logged_in_user['user_type'] == 'admin') {
+
+				$_SESSION['user'] = $logged_in_user;
+				$_SESSION['success']  = "yay";
+				header('location: admin/home.php');		  
+			}
+            if ($logged_in_user['user_type'] == 'sadmin') {
 
 				$_SESSION['user'] = $logged_in_user;
 				$_SESSION['success']  = "yay";
@@ -368,9 +374,12 @@ function login(){
 }
 
 function isAdmin(){
-	if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'admin' ) {
+	if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'admin') {
 		return true;
-	}else{
+	}
+    if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'sadmin'){
+        return true;
+    }else{
 		return false;
 	}
 }
