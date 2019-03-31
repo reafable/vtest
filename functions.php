@@ -77,7 +77,13 @@ function moveRequestToPending(){
     
     $edit_req_id = $_POST['edit_req_id'];
     
-    $query = "UPDATE requests SET status='pending' WHERE id='$edit_req_id'";
+    $date = date('Y-m-d');
+    
+    if(isset($_SESSION['user'])){
+        $user = $_SESSION['user']['username'];
+    }
+    
+    $query = "UPDATE requests SET status='pending', pendate='$date', penby='$user' WHERE id='$edit_req_id'";
     mysqli_query($db, $query);
 }
 
@@ -337,13 +343,13 @@ function login(){
 		if (mysqli_num_rows($results) == 1) { // user found
 			// check if user is admin or not
 			$logged_in_user = mysqli_fetch_assoc($results);
-			if ($logged_in_user['user_type'] == 'admin') {
+			if ($logged_in_user['user_type'] == 'sadmin') {
 
 				$_SESSION['user'] = $logged_in_user;
 				$_SESSION['success']  = "yay";
 				header('location: admin/home.php');		  
 			}
-            if ($logged_in_user['user_type'] == 'sadmin') {
+            else if ($logged_in_user['user_type'] == 'admin') {
 
 				$_SESSION['user'] = $logged_in_user;
 				$_SESSION['success']  = "yay";
@@ -374,10 +380,10 @@ function login(){
 }
 
 function isAdmin(){
-	if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'admin') {
+	if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'sadmin') {
 		return true;
 	}
-    if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'sadmin'){
+    else if (isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'admin'){
         return true;
     }else{
 		return false;
@@ -428,15 +434,6 @@ if(isset($_POST['toggleType'])){
 
     header('location: ' . $_SERVER['PHP_SELF']);
 }
-
-/*function moveRequestToPending(){
-    global $db;
-
-    $edit_req_id = $_POST['edit_req_id'];
-
-    $query = "UPDATE requests SET status='pending' WHERE id='$edit_req_id'";
-    mysqli_query($db, $query);
-}*/
 
 function toggleUserStatus(){
     global $db;
@@ -535,126 +532,264 @@ function displayUsers(){
             $status = $row['status'];
             $password = $row['password'];
             
-            echo
-                "<tr>" .
-                //"<td>" . $row['id'] . "</td>" . 
-                "<td>" . $row['fname'] . "</td>" .
-                "<td>" . $row['lname'] . "</td>" .
-                "<td>" . $row['username'] . "</td>" .
-                "<td>" . $row['user_type'] . "</td>" .
-                "<td>" . $row['status'] . "</td>" .
-                //"<td>" . $row['password'] . "</td>" .
-                "<td>" . 
-                "<a href='#toggle" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-warning btn-sm'>Toggle Status</button></a>" . 
-                " " . 
-                "<a href='#toggleType" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Toggle Type</button></a>" . 
-                " " . 
-                "<a href='#changePassword" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-info btn-sm'>Change Password</button></a>" . 
-                " " .
-                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
-                "</td>".
-                "<div class='modal fade' id='toggle" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
-                                        "<div class='modal-dialog' role='document'>" .
-                                           "<form method='post'>" .
-                                                "<div class='modal-content'>" .
-                                                "<div class='modal-header'>" .
-                                                    "<h5 class='modal-title id='rejectModalLabel'>Toggle User Status</h5>" .
-                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
-                                                        "<span aria-hidden='true'>&times;</span>" .
-                                                    "</button>" .
-                                                "</div>" .
-                                                "<div class='modal-body'>" .
-                                                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
-                                                    "<p>Are you sure you want to toggle ". $username ."'s status?</p>" .
-                                                "</div>" .
-                                                "<div class='modal-footer'>" .
-                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
-                                                    "<button type='submit' class='btn btn-warning' name='toggle'>Toggle</button>" .
-                                                "</div>" .
-                                            "</div>" .
-                                           "</form>" .
-                                        "</div>" .
-                                    "</div>" .
-                "<div class='modal fade' id='toggleType" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
-                                        "<div class='modal-dialog' role='document'>" .
-                                           "<form method='post'>" .
-                                                "<div class='modal-content'>" .
-                                                "<div class='modal-header'>" .
-                                                    "<h5 class='modal-title id='rejectModalLabel'>Toggle User Type</h5>" .
-                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
-                                                        "<span aria-hidden='true'>&times;</span>" .
-                                                    "</button>" .
-                                                "</div>" .
-                                                "<div class='modal-body'>" .
-                                                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
-                                                    "<p>Are you sure you want to toggle ". $username ."'s type?</p>" .
-                                                "</div>" .
-                                                "<div class='modal-footer'>" .
-                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
-                                                    "<button type='submit' class='btn btn-danger' name='toggleType'>Toggle</button>" .
-                                                "</div>" .
-                                            "</div>" .
-                                           "</form>" .
-                                        "</div>" .
-                                    "</div>" .
-                "<div class='modal fade' id='changePassword" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
-                                        "<div class='modal-dialog' role='document'>" .
-                                           "<form method='post'>" .
-                                                "<div class='modal-content'>" .
-                                                "<div class='modal-header'>" .
-                                                    "<h5 class='modal-title id='rejectModalLabel'>Change Password</h5>" .
-                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
-                                                        "<span aria-hidden='true'>&times;</span>" .
-                                                    "</button>" .
-                                                "</div>" .
-                                                "<div class='modal-body'>" .
-                                                    "<input type='hidden' name='changepassword_req_id' value='" . $id . "'>" .
-                                                    "<p>Current Password: " . $password . "</p>" .
-                                                    "<div class='form-group'>" .
-                                                    "<label for='password3'>New Password</label>" .
-                                                    "<input type='password' class='form-control' id='password3' name='password3' placeholder='Enter new password' required>" .
-                                                    "</div>" .
-                                                    "<div class='form-group'>" .
-                                                    "<label for='password4'>Confirm Password</label>" .
-                                                    "<input type='password' class='form-control' id='password4' name='password4' placeholder='Re-enter  new password' required>" .
-                                                    "</div>" .
-                                                "</div>" .
-                                                "<div class='modal-footer'>" .
-                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
-                                                    "<button type='submit' class='btn btn-info' name='changePassword'>Save</button>" .
-                                                "</div>" .
-                                            "</div>" .
-                                           "</form>" .
-                                        "</div>" .
-                                    "</div>" .
-                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
-                                        "<div class='modal-dialog' role='document'>" .
-                                           "<form method='post'>" .
-                                                "<div class='modal-content'>" .
-                                                "<div class='modal-header'>" .
-                                                    "<h5 class='modal-title id='editModalLabel'>User Details</h5>" .
-                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
-                                                        "<span aria-hidden='true'>&times;</span>" .
-                                                    "</button>" .
-                                                "</div>" .
-                                                "<div class='modal-body'>" .
-                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
-                                                    "<p>First Name: " . $fname . "</p>" .
-                                                    "<p>Last Name: " . $lname . "</p>" .
-                                                    "<p>Username: " . $username . "</p>" .
-                                                    "<p>User Type: " . $user_type . "</p>" .
-                                                    "<p>Status: " . $status . "</p>" .
-                                                    "<p>Password: " . $password . "</p>" .
-                                                "</div>" .
-                                                "<div class='modal-footer'>" .
-                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>" ./*
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                
+                include('../sadminUsersTable.php');
+                /*echo
+                    "<tr>" .
+                    //"<td>" . $row['id'] . "</td>" . 
+                    "<td>" . $fname . "</td>" .
+                    "<td>" . $lname . "</td>" .
+                    "<td>" . $username . "</td>" .
+                    "<td>" . $user_type . "</td>" .
+                    "<td>" . $status . "</td>" .
+                    //"<td>" . $row['password'] . "</td>" .
+                    "<td>" . 
+                    "<a href='#toggle" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-warning btn-sm'>Toggle Status</button></a>" . 
+                    " " . 
+                    "<a href='#toggleType" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Toggle Type</button></a>" . 
+                    " " . 
+                    "<a href='#changePassword" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-info btn-sm'>Change Password</button></a>" . 
+                    " " .
+                    "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                    "</td>".
+                    "<div class='modal fade' id='toggle" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title' id='rejectModalLabel'>Toggle User Status</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
+                    "<p>Are you sure you want to toggle ". $username ."'s status?</p>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                    "<button type='submit' class='btn btn-warning' name='toggle'>Toggle</button>" .
+                    "</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal fade' id='toggleType" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title' id='rejectModalLabel'>Toggle User Type</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
+                    "<p>Are you sure you want to toggle ". $username ."'s type?</p>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                    "<button type='submit' class='btn btn-danger' name='toggleType'>Toggle</button>" .
+                    "</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal fade' id='changePassword" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title' id='rejectModalLabel'>Change Password</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='changepassword_req_id' value='" . $id . "'>" .
+                    "<p>Current Password: " . $password . "</p>" .
+                    "<div class='form-group'>" .
+                    "<label for='password3'>New Password</label>" .
+                    "<input type='password' class='form-control' id='password3' name='password3' placeholder='Enter new password' required>" .
+                    "</div>" .
+                    "<div class='form-group'>" .
+                    "<label for='password4'>Confirm Password</label>" .
+                    "<input type='password' class='form-control' id='password4' name='password4' placeholder='Re-enter  new password' required>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                    "<button type='submit' class='btn btn-info' name='changePassword'>Save</button>" .
+                    "</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title id='editModalLabel'>User Details</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                    "<p>First Name: " . $fname . "</p>" .
+                    "<p>Last Name: " . $lname . "</p>" .
+                    "<p>Username: " . $username . "</p>" .
+                    "<p>User Type: " . $user_type . "</p>" .
+                    "<p>Status: " . $status . "</p>" .
+                    "<p>Password: " . $password . "</p>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>" ./*
                                                     "<button type='submit' class='btn btn-primary' name='save'>Save Changes</button>" .*/
-                                                "</div>" .
-                                            "</div>" .
-                                           "</form>" .
-                                        "</div>" .
-                                    "</div>" .
-                "</tr>";
+                    /*"</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "</tr>";  */
+                
+                
+            }else{
+                
+                
+                include('../adminUsersTable.php');
+                
+                /*echo
+                    "<tr>" .
+                    //"<td>" . $row['id'] . "</td>" . 
+                    "<td>" . $fname. "</td>" .
+                    "<td>" . $lname . "</td>" .
+                    "<td>" . $username . "</td>" .
+                    "<td>" . $user_type . "</td>" .
+                    "<td>" . $status . "</td>" .
+                    //"<td>" . $row['password'] . "</td>" .
+                    "<td>" . /*
+                    "<a href='#toggle" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-warning btn-sm'>Toggle Status</button></a>" . 
+                    " " . 
+                    "<a href='#toggleType" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Toggle Type</button></a>" . *//*
+                    " " . 
+                    "<a href='#changePassword" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-info btn-sm'>Change Password</button></a>" . 
+                    " " .
+                    "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                    "</td>".
+                    "<div class='modal fade' id='toggle" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title id='rejectModalLabel'>Toggle User Status</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
+                    "<p>Are you sure you want to toggle ". $username ."'s status?</p>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                    "<button type='submit' class='btn btn-warning' name='toggle'>Toggle</button>" .
+                    "</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal fade' id='toggleType" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title id='rejectModalLabel'>Toggle User Type</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='toggle_req_id' value='" . $id . "'>" .
+                    "<p>Are you sure you want to toggle ". $username ."'s type?</p>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                    "<button type='submit' class='btn btn-danger' name='toggleType'>Toggle</button>" .
+                    "</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal fade' id='changePassword" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title id='rejectModalLabel'>Change Password</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='changepassword_req_id' value='" . $id . "'>" .
+                    "<p>Current Password: " . $password . "</p>" .
+                    "<div class='form-group'>" .
+                    "<label for='password3'>New Password</label>" .
+                    "<input type='password' class='form-control' id='password3' name='password3' placeholder='Enter new password' required>" .
+                    "</div>" .
+                    "<div class='form-group'>" .
+                    "<label for='password4'>Confirm Password</label>" .
+                    "<input type='password' class='form-control' id='password4' name='password4' placeholder='Re-enter  new password' required>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                    "<button type='submit' class='btn btn-info' name='changePassword'>Save</button>" .
+                    "</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                    "<form method='post'>" .
+                    "<div class='modal-content'>" .
+                    "<div class='modal-header'>" .
+                    "<h5 class='modal-title id='editModalLabel'>User Details</h5>" .
+                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                    "<span aria-hidden='true'>&times;</span>" .
+                    "</button>" .
+                    "</div>" .
+                    "<div class='modal-body'>" .
+                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                    "<p>First Name: " . $fname . "</p>" .
+                    "<p>Last Name: " . $lname . "</p>" .
+                    "<p>Username: " . $username . "</p>" .
+                    "<p>User Type: " . $user_type . "</p>" .
+                    "<p>Status: " . $status . "</p>" .
+                    "<p>Password: " . $password . "</p>" .
+                    "</div>" .
+                    "<div class='modal-footer'>" .
+                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>" ./*
+                                                    "<button type='submit' class='btn btn-primary' name='save'>Save Changes</button>" .*/
+                    /*"</div>" .
+                    "</div>" .
+                    "</form>" .
+                    "</div>" .
+                    "</div>" .
+                    "</tr>";*/
+                
+                
+                
+                
+                
+            }
+            
+            
         }
     }
 }
@@ -677,7 +812,7 @@ function changePassword(){
 
     if($password3 == $password4){
 
-        $query = "UPDATE users SET password='$password3' WHERE id='$changepassword_req_id'";
+        $query = "UPDATE users SET password='" . md5($password3) . "' WHERE id='$changepassword_req_id'";
         mysqli_query($db, $query);
 
     }
@@ -858,7 +993,7 @@ function displayAssetPooled(){
 
 function displayServicePending(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='pending'";
+    $query = "SELECT id, custname, postdate, compdate, serv_type, servdesc, postby, pendate, penby FROM requests WHERE type='service' AND status='pending'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -874,6 +1009,8 @@ function displayServicePending(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $pendate = $row['pendate'];
+            $penby = $row['penby'];
             $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
             echo
@@ -882,6 +1019,8 @@ function displayServicePending(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
@@ -927,6 +1066,8 @@ function displayServicePending(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Moved To Pending On: " . $pendate . "</p>" .
+                                                    "<p>Moved To Pending By: " . $penby . "</p>" .
                                                     "<p>Service Type: " . $serv_type . "</p>" .
                                                     "<p>Service Description: " . $servdesc . "</p>" .
                 "<label for='targetDate'>Target Completion Date</label>" .
@@ -1309,7 +1450,7 @@ function displayAssetCompleted(){
 // pull pending asset requests from requests table
 function displayAssetPending(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, assetdesc, postby FROM requests WHERE type='asset' AND status='pending'";
+    $query = "SELECT id, custname, postdate, compdate, assetdesc, postby, pendate, penby FROM requests WHERE type='asset' AND status='pending'";
     $results = mysqli_query($db, $query);
     
     if($results-> num_rows > 0){
@@ -1319,6 +1460,8 @@ function displayAssetPending(){
             $postdate = $row['postdate'];
             $postby = $row['postby'];
             $compdate = $row['compdate'];
+            $pendate = $row['pendate'];
+            $penby = $row['penby'];
             $assetdesc = $row['assetdesc'];
             echo 
                 "<tr>" .
@@ -1326,6 +1469,8 @@ function displayAssetPending(){
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -1370,6 +1515,8 @@ function displayAssetPending(){
                                                     "<p>Posted On: " . $postdate . "</p>" .
                                                     "<p>Posted By: " . $postby . "</p>" .
                                                     "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Moved To Pending On: " . $pendate . "</p>" .
+                                                    "<p>Moved To Pending By: " . $penby . "</p>" .
                                                     "<p>Assets Required: " . $assetdesc . "</p>" .
                 "<label for='targetDate'>Target Completion Date</label>" .
                 "<input type='date' class='form-control' id='targetDateAsset' name='targetDate' placeholder='Enter date' required>" .

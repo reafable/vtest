@@ -62,6 +62,8 @@ if (!isAdmin()) {
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
+                                <th>Date Pending</th>
+                                <th>Pending By</th>
                                 <th>Service Type</th>
                                 <th>Service Description</th>
                                 <th>Actions</th>
@@ -83,6 +85,8 @@ if (!isAdmin()) {
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
+                                <th>Date Pending</th>
+                                <th>Pending By</th>
                                 <th>Assets Required</th>
                                 <th>Actions</th>
                             </thead>
@@ -189,7 +193,7 @@ if (!isAdmin()) {
             if($("#targetDateAsset").length){
                 document.getElementById("targetDateAsset").setAttribute("min", today);
             }
-            if($("#targetDateService").length){
+            else if($("#targetDateService").length){
                 document.getElementById("targetDateService").setAttribute("min", today);
             }
             
