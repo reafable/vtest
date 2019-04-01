@@ -93,8 +93,14 @@ function moveRequestToInProgress(){
     $edit_req_id = $_POST['edit_req_id'];
     
     $targetDate = date('Y-m-d', strtotime($_POST['targetDate']));
+
+    $date = date('Y-m-d');
+
+    if(isset($_SESSION['user'])){
+        $user = $_SESSION['user']['username'];
+    }
     
-    $query = "UPDATE requests SET status='inprogress', actdate='$targetDate' WHERE id='$edit_req_id'";
+    $query = "UPDATE requests SET status='inprogress', actdate='$targetDate', inpdate='date', inpby='$user' WHERE id='$edit_req_id'";
     mysqli_query($db, $query);
 }
 
@@ -104,11 +110,16 @@ function moveRequestToCompleted(){
     $edit_req_id = $_POST['edit_req_id'];
     
     $date = date('Y-m-d');
+
+    if(isset($_SESSION['user'])){
+        $user = $_SESSION['user']['username'];
+    }
     
     $query = "UPDATE requests
               SET
               status='completed', 
-              findate='$date'
+              findate='$date', 
+              finby='$user'
               WHERE
               id='$edit_req_id'";
     mysqli_query($db, $query);
@@ -1089,7 +1100,7 @@ function displayServicePending(){
 
 function displayServiceInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='inprogress'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, serv_type, servdesc, postby, penby, inpby, pendate, inpdate FROM requests WHERE type='service' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -1104,8 +1115,12 @@ function displayServiceInprogress(){
             $custname = $row['custname'];
             $postdate = $row['postdate'];
             $postby = $row['postby'];
+            $penby = $row['penby'];
+            $inpby = $row['inpby'];
             $compdate = $row['compdate'];
             $actdate = $row['actdate'];
+            $pendate = $row['pendate'];
+            $inpdate = $row['inpdate'];
             $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
             echo
@@ -1115,6 +1130,10 @@ function displayServiceInprogress(){
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 

@@ -18,10 +18,15 @@ if (!isAdmin()) {
         <script src="../js/jquery-3.3.1.min.js"></script>
 
         <script type="text/javascript" src="../js/datatables.min.js"></script>
+        
+        <script type="text/javascript" src="../js/dataTables.bootstrap4.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
+        <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
         <script src="../js/bootstrap.bundle.min.js"></script>
 
         <link rel="stylesheet" href="../css/bootstrap.css">
+
+
         <link rel="stylesheet" href="../css/admin.css">
         <link rel="stylesheet" href="../css/style2.css">
         <link rel="stylesheet" href="../css/all.css">
@@ -36,7 +41,7 @@ if (!isAdmin()) {
         <div class="wrapper">
             <?php
             include('../blocks/sidenav.php');
-        ?>
+            ?>
 
                 <div id="content">
 
@@ -63,6 +68,10 @@ if (!isAdmin()) {
                                     <th>Posted By</th>
                                     <th>Expected Completion</th>
                                     <th>Target Completion</th>
+                                    <th>Date Pending</th>
+                                    <th>Pending By</th>
+                                    <th>Date Ongoing</th>
+                                    <th>Ongoing By</th>
                                     <th>Service Type</th>
                                     <th>Service Description</th>
                                     <th>Actions</th>
@@ -70,8 +79,8 @@ if (!isAdmin()) {
                                 <tbody>
                                     <?php
                                     displayServiceInprogress();
-                                ?>
-                                        s </tbody>
+                                    ?>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -91,7 +100,7 @@ if (!isAdmin()) {
                                 <tbody>
                                     <?php
                                     displayAssetInProgress();
-                                ?>
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -106,7 +115,8 @@ if (!isAdmin()) {
             $(document).ready(function() {
                 $("#serviceInProgressTable").DataTable({
                     pageLength: 5,
-                    lengthMenu: [5, 10, 25, 50, 100]
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    scrollX: true,
                 });
                 $("#assetInProgressTable").DataTable({
                     pageLength: 5,

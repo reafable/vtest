@@ -13,7 +13,7 @@ if (!isAdmin()) {
 
     <head>
         <meta charset="UTF-8">
-        <title>Assets</title>
+        <title>Requests Overview</title>
 
         <script src="../js/jquery-3.3.1.min.js"></script>
 

@@ -24,7 +24,7 @@
         "<a href='#changePassword" . $id . "' data-toggle='modal'><button type='button' class='btn btn-info btn-sm'>Change Password</button></a>" .
         " ";
         } ?>
-        <a href='#edit<?php echo $id ?>' data-toggle='modal'><button type='button' class='btn btn-primary btn-sm'>View</button></a>
+        <!--<a href='#edit<?php /*echo $id*/ ?>' data-toggle='modal'><button type='button' class='btn btn-primary btn-sm'>View</button></a>-->
     </td>
     <div class='modal fade' id='toggle<?php echo $id ?>' tabindex='-1' role='dialog' aria-labelledby='reject<?php echo $id ?>Label' aria-hidden='true'>
         <div class='modal-dialog' role='document'>
@@ -54,12 +54,12 @@
             <form method='post'>
                 <div class='modal-content'>
                     <div class='modal-header'>
-                        <h5 class='modal-title' id=' rejectModalLabel '>Toggle User Type</h5>
-                        <button type='button ' class='close ' data-dismiss='modal ' aria-label='Close '>
-                            <span aria-hidden='true '>&times;</span>
+                        <h5 class='modal-title' id='rejectModalLabel'>Toggle User Type</h5>
+                        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
                         </button>
                     </div>
-                    <div class='modal-body '>
+                    <div class='modal-body'>
                         <input type='hidden' name='toggle_req_id' value='<?php echo $id?>'>
                         <p>Are you sure you want to toggle <?php echo $username?>'s type?</p>
                     </div>
