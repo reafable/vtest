@@ -100,7 +100,7 @@ function moveRequestToInProgress(){
         $user = $_SESSION['user']['username'];
     }
     
-    $query = "UPDATE requests SET status='inprogress', actdate='$targetDate', inpdate='date', inpby='$user' WHERE id='$edit_req_id'";
+    $query = "UPDATE requests SET status='inprogress', actdate='$targetDate', inpdate='$date', inpby='$user' WHERE id='$edit_req_id'";
     mysqli_query($db, $query);
 }
 
@@ -1216,6 +1216,10 @@ function displayAssetInprogress(){
             $compdate = $row['compdate'];
             $actdate = $row['actdate'];
             $assetdesc = $row['assetdesc'];
+            $pendate = $row['pendate'];
+            $penby = $row['penby'];
+            $inpdate = $row['inpdate'];
+            $inpby = $row['inpby'];
             echo
                 "<tr>" .
                 "<td>" . $custname . "</td>".
@@ -1223,6 +1227,10 @@ function displayAssetInprogress(){
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -2127,6 +2135,32 @@ function populateServiceSelect(){
     $results = mysqli_query($db, $query);
     
     echo "<option value='' selected disabled>Select a service</option>";
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_array($results)){
+            echo "<option value='" . $row[0] . "'>" . $row[0] . "</option>";
+        }
+    }
+}
+
+function populateBranchSelect(){
+    global $db;
+    $query = "SELECT location FROM branches";
+    $results = mysqli_query($db, $query);
+    
+    echo "<option value='' selected disabled>Select branch</option>";
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_array($results)){
+            echo "<option value='" . $row[0] . "'>" . $row[0] . "</option>";
+        }
+    }
+}
+
+function populateDepartmentSelect(){
+    global $db;
+    $query = "SELECT name FROM departments";
+    $results = mysqli_query($db, $query);
+    
+    echo "<option value='' selected disabled>Select department</option>";
     if($results-> num_rows > 0){
         while($row = mysqli_fetch_array($results)){
             echo "<option value='" . $row[0] . "'>" . $row[0] . "</option>";

@@ -105,15 +105,27 @@ if (!isAdmin()) {
                                         </div>
                                         <div class="form-group">
                                             <label for="name">Username</label>
-                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required>
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="name">User Type</label>
-                                            <select class="form-control" name="user_type" required>
+                                            <label for="user_type">User Type</label>
+                                            <select id="user_type" class="form-control" name="user_type" required>
                                             <option value="" selected disabled>Select user type</option>
                                             <option value="admin">Admin</option>
                                             <option value="user">User</option>
-                                        </select>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="branch">Branch</label>
+                                            <select id="branch" class="form-control" name="branch" required>
+                                            <?php populateBranchSelect(); ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="department">Department</label>
+                                            <select id="department" class="form-control" name="department" required>
+                                            <?php populateDepartmentSelect(); ?>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="name">Password</label>

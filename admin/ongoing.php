@@ -21,6 +21,7 @@ if (!isAdmin()) {
         
         <script type="text/javascript" src="../js/dataTables.bootstrap4.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
+        <script type="text/javascript" src="../js/dataTables.fixedHeader.min.js"></script>
         <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
         <script src="../js/bootstrap.bundle.min.js"></script>
 
@@ -94,6 +95,10 @@ if (!isAdmin()) {
                                     <th>Posted By</th>
                                     <th>Expected Completion</th>
                                     <th>Target Completion</th>
+                                    <th>Date Pending</th>
+                                    <th>Pending By</th>
+                                    <th>Date Ongoing</th>
+                                    <th>Ongoing By</th>
                                     <th>Assets Required</th>
                                     <th>Actions</th>
                                 </thead>
@@ -108,19 +113,18 @@ if (!isAdmin()) {
 
                 </div>
         </div>
-        
-        <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
 
         <script>
             $(document).ready(function() {
                 $("#serviceInProgressTable").DataTable({
                     pageLength: 5,
                     lengthMenu: [5, 10, 25, 50, 100],
-                    scrollX: true,
+                    scrollX: true
                 });
                 $("#assetInProgressTable").DataTable({
                     pageLength: 5,
-                    lengthMenu: [5, 10, 25, 50, 100]
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    scrollX: true
                 });
                 
                 $("#sidebar").mCustomScrollbar({
