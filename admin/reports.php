@@ -19,6 +19,8 @@ if (!isAdmin()) {
         <link rel="stylesheet" href="../css/formcenter.css">
         <link rel="stylesheet" href="../css/style2.css">
 
+        <script src="../js/Chart.min.js"></script>
+
         <link rel="stylesheet" href="../css/jquery.mCustomScrollbar.min.css">
 
         <script src="../js/fa-solid.js"></script>
@@ -47,12 +49,12 @@ if (!isAdmin()) {
                     </ol>
                 </nav>
                 
-                <form action="reports.php" method="post">
+                 <form action="reports.php" method="post">
                     
                     <div class="form-row">
                         
                         <div class="form-group col" >
-                            
+                        
                             <label for="dateRange1">From</label>
                             <input type="date" class="form-control" id="dateRange1" name="dateRange1" required>
                             
@@ -76,29 +78,80 @@ if (!isAdmin()) {
                     
                 </form>
 
-                <div class="jumbotron">
-                    <h2>Summary of Requests</h2>
-                    <p class="text-dark">From: <?php if(isset($_POST['dateRange1'])){ $d1=$_POST['dateRange1']; echo $d1;} ?></p>
-                    <p class="text-dark">To: <?php if(isset($_POST['dateRange2'])){ $d2=$_POST['dateRange2']; echo $d2;} ?></p>
-                    <hr class="my-4">
-                    <p class="text-dark">Total requests: <?php displayCountAllFromTo(); ?></p>
-                    <p class="text-dark">Pooled requests: <?php displayCountPoolFromTo(); ?></p>
-                    <p class="text-dark">Pending requests: <?php displayCountPendingFromTo(); ?></p>
-                    <p class="text-dark">Ongoing requests: <?php displayCountInProgressFromTo(); ?></p>
-                    <p class="text-dark">Completed requests: <?php displayCountCompletedFromTo(); ?></p>
-                    <p class="text-dark">Rejected requests: <?php displayCountRejectedFromTo(); ?></p>
-                    
-                    <h1 class="display-2 text-success">
 
-                        
 
-                    </h1>
-                    <!-- <p class="lead">Hello. Goodbye. Genevieve.</p> -->
-                    <!-- <hr class="my-4">
-                    <p class="lead">
-                        <a class="btn btn-primary btn-lg" href="" role="button">OK</a>
-                    </p> -->
+                <!-- <div class="container"> -->
+                
+                <div class="row mt-5">
+                
+                <div class="col-6">
+                
+                <div class="card">
+                
+                <div class="card-body">
+                
+                <canvas id="requestTypes"></canvas>
+
+                <h5 class="card-title">Request Types</h5>
+                
                 </div>
+                
+                </div>
+                
+                </div>
+                <div class="col-6">
+                
+                <div class="card">
+                
+                <div class="card-body">
+                
+                <canvas id="serviceTypes"></canvas>
+                
+                <h5 class="card-title">Service Types</h5>
+                
+                </div>
+                
+                </div>
+                
+                </div>
+                
+                </div>
+                <div class="row mt-5">
+                
+                <div class="col-6">
+                
+                <div class="card">
+                
+                <div class="card-body">
+                
+                <canvas id="requestBranches"></canvas>
+
+                <h5 class="card-title">Branch Requests</h5>
+                
+                </div>
+                
+                </div>
+                
+                </div>
+                <div class="col-6">
+                
+                <div class="card">
+                
+                <div class="card-body">
+                
+                <canvas id="completionRate"></canvas>
+
+                <h5 class="card-title">Request Types</h5>
+                
+                </div>
+                
+                </div>
+                
+                </div>
+                
+                </div>
+                
+                <!-- </div> -->
 
 
 
@@ -147,6 +200,79 @@ if (!isAdmin()) {
                     
                 }
                 
+            });
+
+            
+            
+
+            let assetCount = <?php displayCountAssetFromTo(); ?>;
+            let serviceCount = <?php displayCountServiceFromTo(); ?>;
+            let itCount = <?php displayCountITFromTo(); ?>;
+            let d2dCount = <?php displayCountD2DFromTo(); ?>;
+            let carCount = <?php displayCountCarFromTo(); ?>;
+            let ncrCount = <?php displayCountNCRFromTo(); ?>;
+            let nlCount = <?php displayCountNLFromTo(); ?>;
+            let slCount = <?php displayCountSLFromTo(); ?>;
+            let vCount = <?php displayCountVFromTo(); ?>;
+            let mCount = <?php displayCountMFromTo(); ?>;
+            let poolCount = <?php displayCountPoolFromTo(); ?>;
+            let pendingCount = <?php displayCountPendingFromTo(); ?>;
+            let ongoingCount = <?php displayCountInProgressFromTo(); ?>;
+            let completedCount = <?php displayCountCompletedFromTo(); ?>;
+
+            let requestTypes = document.getElementById('requestTypes').getContext('2d');
+
+            let requestTypesChart = new Chart(requestTypes, {
+                type:'doughnut',
+                data:{
+                    labels:['Asset', 'Service'],
+                    datasets:[{
+                        label:'Requests Type',
+                        data:[assetCount, serviceCount],
+                        backgroundColor:['#f4ce22','#164c9e']
+                    }]
+                }
+            });
+
+            let serviceTypes = document.getElementById('serviceTypes').getContext('2d');
+
+            let serviceTypesChart = new Chart(serviceTypes, {
+                type:'doughnut',
+                data:{
+                    labels:['IT', 'Day-to-day', 'Car'],
+                    datasets:[{
+                        label:'Service Types',
+                        data:[itCount, d2dCount, carCount],
+                        backgroundColor:['#f4ce22','#164c9e','#1ca05c']
+                    }]
+                }
+            });
+
+            let requestBranches = document.getElementById('requestBranches').getContext('2d');
+
+            let requestBranchesChart = new Chart(requestBranches, {
+                type:'doughnut',
+                data:{
+                    labels:['NCR', 'North Luzon', 'South Luzon', 'Visayas', 'Mindanao'],
+                    datasets:[{
+                        label:'Requesting Branches',
+                        data:[ncrCount, nlCount, slCount, vCount, mCount],
+                        backgroundColor:['#FF530D','#E82C0C','FF0000','E80C7A','FF0DFF']
+                    }]
+                }
+            });
+
+            let completionRate = document.getElementById('completionRate').getContext('2d');
+
+            let completionRateChart = new Chart(completionRate, {
+                type:'doughnut',
+                data:{
+                    labels:['Completed', 'Ongoing', 'Pending', 'Pooled'],
+                    datasets:[{
+                        label:'Completion Rate',
+                        data:[completedCount, ongoingCount, pendingCount, poolCount]
+                    }]
+                }
             });
 
         </script>
