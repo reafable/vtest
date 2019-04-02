@@ -21,6 +21,11 @@ if(isset($_POST['reject'])){
     header('location: ' . $_SERVER['PHP_SELF']);
 }
 
+if(isset($_POST['mto'])){
+    moveRequest();
+    header('location: ' . $_SERVER['PHP_SELF']);
+}
+
 if(isset($_POST['mpending'])){
     moveRequestToPending();
     header('location: ' . $_SERVER['PHP_SELF']);
@@ -70,6 +75,15 @@ function rejectRequest(){
               WHERE
               id='$reject_req_id'";
     mysqli_query($db, $query);
+}
+
+function superMoveRequestToInProgress(){
+    global $db;
+    $move_req_id = $_POST['move_req_id'];
+    if(isset($_SESSION['user']['username'])){
+        $user = $_SESSION['user']['username'];
+    }
+    $query = "UPDATE requests SET status='inprogress', finby='NULL', findate='NULL'";
 }
 
 function moveRequestToPending(){
@@ -213,8 +227,8 @@ function createUser(){
     global $db;
     
     $username = e($_POST['username']);
-    $password1 = e($_POST['password1']);
-    $password2 = e($_POST['password2']);
+    $password1 = md5(e($_POST['password1']));
+    $password2 = md5(e($_POST['password2']));
     $user_type = e($_POST['user_type']);
     //$status = e($_POST['status']);
     $fname = e($_POST['fname']);
@@ -222,7 +236,8 @@ function createUser(){
     
     
     if($password1 == $password2){
-        $query = "INSERT INTO users (id, username, password, user_type, status, fname, lname) VALUES ('NULL', '$username', '$password1', '$user_type', 'active', '$fname', '$lname')";
+        $password = $password1;
+        $query = "INSERT INTO users (id, username, password, user_type, status, fname, lname) VALUES ('NULL', '$username', '$password', '$user_type', 'active', '$fname', '$lname')";
         mysqli_query($db, $query);
     }
 }
@@ -321,6 +336,10 @@ if (isset($_POST['login'])) {
 	login();
 }
 
+if (isset($_POST['loginc'])) {
+	loginC();
+}
+
 // log user out if logout is clicked
 if (isset($_GET['logout'])) {
 	session_destroy();
@@ -369,25 +388,61 @@ function login(){
 				$_SESSION['user'] = $logged_in_user;
 				$_SESSION['success']  = "yay";
 
-				header('location: requests/type.php');
+				header('location: requests/home.php');
 			}
-		}else {
-//			array_push($errors, "Wrong username or password.");
-            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-  Your username or password may be wrong. Or your account is inactive.
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>';
-		}
-	}else{
-        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-  Your username or password may be wrong. Or your account is inactive.
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>';
-    }
+        }else{
+            echo 
+            '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Your username or password may be wrong. Or your account is inactive.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>';
+        }
+	}
+}
+
+function loginC(){
+	global $db, $username, $errors;
+
+	// grab form values
+	$username = e($_POST['username']);
+	$password = e(md5($_POST['password']));
+
+	// check if form is complete
+	if (empty($username)) {
+		array_push($errors, "Username is required");
+	}
+	if (empty($password)) {
+		array_push($errors, "Password is required");
+	}
+
+	// attempt login
+	if (count($errors) == 0) {
+		$password = $password;
+
+		$query = "SELECT * FROM customers WHERE username='$username' AND password='$password' AND status='active' LIMIT 1";
+		$results = mysqli_query($db, $query);
+
+		if (mysqli_num_rows($results) == 1) { // user found
+			// check if user is admin or not
+			$logged_in_user = mysqli_fetch_assoc($results);
+			if ($logged_in_user['user_type'] == 'customer') {
+
+				$_SESSION['user'] = $logged_in_user;
+				$_SESSION['success']  = "yay";
+				header('location: customer.php');		  
+			}
+		}else{
+            echo 
+            '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Your username or password may be wrong. Or your account is inactive.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>';
+        }
+	}
 }
 
 function isAdmin(){
@@ -828,6 +883,63 @@ function changePassword(){
 
     }
 
+}
+
+function displayUserServiceRequests(){
+    global $db;
+    $user = $_SESSION['user']['username'];
+    $query = "SELECT * FROM requests WHERE postby='$user' AND type='service'";
+    $results = mysqli_query($db, $query);
+
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_assoc($results)){
+            $uid = $row['uid'];
+            $id = $row['id'];
+            $custname = $row['custname'];
+            $postdate = $row['postdate'];
+            $actdate = $row['actdate'];
+            $postby = $row['postby'];
+            $compdate = $row['compdate'];
+            $status = $row['status'];
+            $serv_type = $row['serv_type'];
+            $servdesc = $row['servdesc'];
+            $pendate = $row['pendate'];
+            $inpdate = $row['inpdate'];
+            $findate = $row['findate'];
+            $finby = $row['finby'];
+            $inpby = $row['inpby'];
+            $penby = $row['penby'];
+            include('userServiceRequestsTable.php');
+        }
+    }
+}
+
+function displayUserAssetRequests(){
+    global $db;
+    $user = $_SESSION['user']['username'];
+    $query = "SELECT * FROM requests WHERE postby='$user' AND type='asset'";
+    $results = mysqli_query($db, $query);
+
+    if($results-> num_rows > 0){
+        while($row = mysqli_fetch_assoc($results)){
+            $uid = $row['uid'];
+            $id = $row['id'];
+            $custname = $row['custname'];
+            $postdate = $row['postdate'];
+            $actdate = $row['actdate'];
+            $postby = $row['postby'];
+            $compdate = $row['compdate'];
+            $status = $row['status'];
+            $assetdesc = $row['servdesc'];
+            $pendate = $row['pendate'];
+            $inpdate = $row['inpdate'];
+            $findate = $row['findate'];
+            $finby = $row['finby'];
+            $inpby = $row['inpby'];
+            $penby = $row['penby'];
+            include('userAssetRequestsTable.php');
+        }
+    }
 }
 
 // pull pooled service requests from requests table
@@ -1293,7 +1405,7 @@ function displayAssetInprogress(){
 
 function displayServiceCompleted(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, findate, serv_type, servdesc, postby FROM requests WHERE type='service' AND status='completed'";
+    $query = "SELECT * FROM requests WHERE type='service' AND status='completed'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -1310,17 +1422,28 @@ function displayServiceCompleted(){
             $postby = $row['postby'];
             $compdate = $row['compdate'];
             $actdate = $row['actdate'];
+            $pendate = $row['pendate'];
+            $penby = $row['penby'];
+            $inpdate = $row['inpdate'];
+            $inpby = $row['inpby'];
             $findate = $row['findate'];
+            $finby = $row['finby'];
             $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
-            echo
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
                 "<td>" . $findate . "</td>".
+                "<td>" . $finby . "</td>".
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
@@ -1380,6 +1503,80 @@ function displayServiceCompleted(){
                                         "</div>" .
                                     "</div>"
                 ;
+            }else{
+                echo
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
+                "<td>" . $findate . "</td>".
+                "<td>" . $finby . "</td>".
+                "<td>" . $serv_type . "</td>".
+                "<td>" . $servdesc . "</td>".
+                "<td>" . 
+                /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                " "    . */
+                // "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                /* "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" . */
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Customer Name: " . $custname . "</p>" .
+                                                    "<p>Posted On: " . $postdate . "</p>" .
+                                                    "<p>Posted By: " . $postby . "</p>" .
+                                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Actual Completion: " . $findate . "</p>" .
+                                                    "<p>Service Description: " . $serv_type . "</p>" .
+                                                    "<p>Service Description: " . $servdesc . "</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>" .
+                                                    /* "<button type='submit' class='btn btn-primary' name='minprogress'>Mark as In-progress</button>" . */
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>"
+                ;
+            } 
         }
     }
 }
@@ -2059,10 +2256,34 @@ function displayCountPooled(){
     echo $total;
 }
 
+function displayCountUserPooled(){
+    global $db;
+    $user = $_SESSION['user']['username'];
+    $query = "SELECT COUNT(1) FROM requests WHERE status='pooled' AND postby='$user'";
+    $results = mysqli_query($db, $query);
+    $row = mysqli_fetch_array($results);
+    
+    $total = $row[0];
+    
+    echo $total;
+}
+
 // pull number of pending requests
 function displayCountPending(){
     global $db;
     $query = "SELECT COUNT(1) FROM requests WHERE status='pending'";
+    $results = mysqli_query($db, $query);
+    $row = mysqli_fetch_array($results);
+    
+    $total = $row[0];
+    
+    echo $total;
+}
+
+function displayCountUserPending(){
+    global $db;
+    $user = $_SESSION['user']['username'];
+    $query = "SELECT COUNT(1) FROM requests WHERE status='pending' AND postby='user'";
     $results = mysqli_query($db, $query);
     $row = mysqli_fetch_array($results);
     
@@ -2083,10 +2304,34 @@ function displayCountInProgress(){
     echo $total;
 }
 
+function displayCountUserInProgress(){
+    global $db;
+    $user = $_SESSION['user']['username'];
+    $query = "SELECT COUNT(1) FROM requests WHERE status='inprogress' AND postby='$user'";
+    $results = mysqli_query($db, $query);
+    $row = mysqli_fetch_array($results);
+    
+    $total = $row[0];
+    
+    echo $total;
+}
+
 // pull number of completed requests
 function displayCountCompleted(){
     global $db;
     $query = "SELECT COUNT(1) FROM requests WHERE status='completed'";
+    $results = mysqli_query($db, $query);
+    $row = mysqli_fetch_array($results);
+    
+    $total = $row[0];
+    
+    echo $total;
+}
+
+function displayCountUserCompleted(){
+    global $db;
+    $user = $_SESSION['user']['username'];
+    $query = "SELECT COUNT(1) FROM requests WHERE status='completed' AND postby='$user'";
     $results = mysqli_query($db, $query);
     $row = mysqli_fetch_array($results);
     

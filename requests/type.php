@@ -40,9 +40,9 @@ if (isAdmin()) {
                </button>
                
                <ol class="breadcrumb">
-                   <li class="breadcrumb-item active">Select Type</li>
-                   <!-- <li class="breadcrumb-item disabled" aria-current="page">Create Request</li>
-                   <li class="breadcrumb-item active" aria-current="page">Asset</li> -->
+                   <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+                   <!-- <li class="breadcrumb-item disabled" aria-current="page">Create Request</li> -->
+                   <li class="breadcrumb-item active" aria-current="page">Select Type</li> 
                </ol>
            </nav>
            

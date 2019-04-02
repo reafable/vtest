@@ -7,18 +7,19 @@
         <p>
             <?php displayCurrentUserFull(); ?>
         </p>
-        <!-- <li>
+        <li>
             <a href="home.php">Home</a>
         </li>
         <li class="">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Requests</a>
             <a href="#" data-toggle="" aria-expanded="false" class="">Requests</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
             <ul class="list-unstyled" id="homeSubmenu">
                 <li>
-                    <a href="pool.php">Pool</a>
+                    <a href="type.php">Create</a>
                 </li>
                 <li>
+                    <a href="my.php">My Requests</a>
+                </li>
+                <!-- <li>
                     <a href="pending.php">Pending</a>
                 </li>
                 <li>
@@ -32,15 +33,11 @@
                 </li>
                 <li>
                     <a href="overview.php">Overview</a>
-                </li>
+                </li> -->
             </ul>
         </li>
-        <li>
+        <!-- <li>
             <a href="users.php">Users</a>
-        </li>
-        <li>
-            <a href="assets.php">Assets</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
         </li> -->
         <li>
             <a href="../login.php?logout='1'">Logout</a>

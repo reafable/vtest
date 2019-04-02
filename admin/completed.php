@@ -64,7 +64,12 @@ if (!isAdmin()) {
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
                                 <th>Target Completion</th>
+                                <th>Pending On</th>
+                                <th>Pending By</th>
+                                <th>Ongoing On</th>
+                                <th>Ongoing By</th>
                                 <th>Actual Completion</th>
+                                <th>Completed By</th>
                                 <th>Service Type</th>
                                 <th>Service Description</th>
                                 <th>Actions</th>
