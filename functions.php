@@ -196,6 +196,7 @@ function postAssetRequest(){
         $user = $_SESSION['user']['username'];
         $username = $_SESSION['user']['user'];
         $department = $_SESSION['user']['department'];
+        $branch = $_SESSION['user']['branch'];
     }
     
     $custname = e($_POST['custname']);
@@ -1975,7 +1976,7 @@ function displayAssets(){
     }
 }
 
-function displayCountAllFromTo(){
+function displayCountAssetFromTo(){
     global $db;
     
     if(isset($_POST['dateRangeButton'])){
@@ -1994,7 +1995,304 @@ function displayCountAllFromTo(){
 
         if(!empty($dateRange1) && !empty($dateRange2)){
 
-            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2')";
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountITFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND serv_type='IT'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountD2DFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND serv_type='day-to-day'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountCarFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND serv_type='Car'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountNCRFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND branch='NCR'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountNLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND branch='North Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountSLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND branch='South Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountVFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND branch='Visayas'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountMFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND branch='Mindanao'";
             $results = mysqli_query($db, $query);
             $row = mysqli_fetch_array($results);
 
