@@ -37,11 +37,8 @@ if (!isAdmin()) {
         <?php
             include('../blocks/sidenav.php');
         ?>
-
         <div id="content">
-
             <nav aria-label="breadcrumb">
-               
                 <button type="button" id="sidebarCollapse" class="btn btn-info float-left mr-2" style="padding: 0.65rem 1rem;">
                     <i class="fas fa-align-left"></i>
                 </button>
@@ -52,8 +49,6 @@ if (!isAdmin()) {
                     <li class="breadcrumb-item active" aria-current="page">Pool</li>
                 </ol>
             </nav>
-
-            
                 <div class="row">
                     <div class="col col-sm-12">
                         <h2>Service Requests</h2>
@@ -88,63 +83,11 @@ if (!isAdmin()) {
                                 <th>Actions</th>
                             </thead>
                             <tbody>
-                                <!--<tr>-->
                                 <?php
                                     
                                     displayAssetPooled();
                                     
-                                    ?>
-
-                                <!-- reject modal -->
-                                <div class="modal fade" id="reject<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="reject<?php echo $id; ?>Label" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <form method="post">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="rejectModalLabel">Reject Request</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="reject_req_id" value="<?php echo $id; ?>">
-                                                    <p>Are you sure you want to reject this request?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-danger" name="reject">Reject</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <!-- edit modal -->
-                                <div class="modal fade" id="edit<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="reject<?php echo $id; ?>Label" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="rejectModalLabel">Edit Request</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <input type="hidden" name="edit_req_id" value="<?php echo $id; ?>">
-                                                <p>Are you sure you want to edit this request?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn btn-primary" name="save">Save changes</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <?php tRowClose(); ?>
-
-                                <!--</tr>-->
-
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -152,9 +95,7 @@ if (!isAdmin()) {
             
         </div>
     </div>
-    
     <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
-
     <script>
         $(document).ready(function() {
             $("#servicePooledTable").DataTable({
@@ -176,8 +117,6 @@ if (!isAdmin()) {
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
         });
-
     </script>
 </body>
-
 </html>

@@ -57,7 +57,7 @@ if (isAdmin()) {
 
             <div class="row">
                 <div class="col-md-6">
-                    <a href="pool.php" class="click-card">
+                    <a href="my.php" class="click-card">
                         <div class="card text-white bg-danger mb-3">
                             <!-- <div class="card-header">Pending Requests</div> -->
                             <div class="card-body">
@@ -72,7 +72,7 @@ if (isAdmin()) {
                 </div>
 
                 <div class="col-md-6">
-                    <a href="pending.php" class="click-card">
+                    <a href="my.php" class="click-card">
                         <div class="card text-white bg-warning mb-3">
                             <!-- <div class="card-header">In-progress Requests</div> -->
                             <div class="card-body">
@@ -91,7 +91,7 @@ if (isAdmin()) {
 
             <div class="row">
                 <div class="col-md-6">
-                    <a href="ongoing.php" class="click-card">
+                    <a href="my.php" class="click-card">
                         <div class="card text-white bg-primary mb-3">
                             <!-- <div class="card-header">Pending Requests</div> -->
                             <div class="card-body">
@@ -106,7 +106,7 @@ if (isAdmin()) {
                 </div>
 
                 <div class="col-md-6">
-                    <a href="completed.php" class="click-card">
+                    <a href="my.php" class="click-card">
                         <div class="card text-white bg-success mb-3">
                             <!-- <div class="card-header">In-progress Requests</div> -->
                             <div class="card-body">
