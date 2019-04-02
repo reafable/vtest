@@ -18,16 +18,10 @@ if (!isAdmin()) {
         <script src="../js/jquery-3.3.1.min.js"></script>
 
         <script type="text/javascript" src="../js/datatables.min.js"></script>
-        
-        <script type="text/javascript" src="../js/dataTables.bootstrap4.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/datatables.min.css">
-        <script type="text/javascript" src="../js/dataTables.fixedHeader.min.js"></script>
-        <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
         <script src="../js/bootstrap.bundle.min.js"></script>
-
+        
         <link rel="stylesheet" href="../css/bootstrap.css">
-
-
         <link rel="stylesheet" href="../css/admin.css">
         <link rel="stylesheet" href="../css/style2.css">
         <link rel="stylesheet" href="../css/all.css">
@@ -47,11 +41,11 @@ if (!isAdmin()) {
                 <div id="content">
 
                     <nav aria-label="breadcrumb">
-                       
+
                         <button type="button" id="sidebarCollapse" class="btn btn-info float-left mr-2" style="padding: 0.65rem 1rem;">
                             <i class="fas fa-align-left"></i>
                         </button>
-                       
+
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="home.php">Home</a></li>
                             <li class="breadcrumb-item disabled" aria-current="page">Requests</li>
@@ -62,7 +56,7 @@ if (!isAdmin()) {
                     <div class="row">
                         <div class="col col-sm-12">
                             <h2>Service Requests</h2>
-                            <table id="serviceInProgressTable" class="table table-striped">
+                            <table id="serviceInProgressTable" class="table table-striped mr-5">
                                 <thead>
                                     <th>Customer Name</th>
                                     <th>Posted On</th>
@@ -114,17 +108,17 @@ if (!isAdmin()) {
                 </div>
         </div>
 
+        <script src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+
         <script>
             $(document).ready(function() {
                 $("#serviceInProgressTable").DataTable({
                     pageLength: 5,
                     lengthMenu: [5, 10, 25, 50, 100],
-                    scrollX: true
                 });
                 $("#assetInProgressTable").DataTable({
                     pageLength: 5,
                     lengthMenu: [5, 10, 25, 50, 100],
-                    scrollX: true
                 });
                 
                 $("#sidebar").mCustomScrollbar({

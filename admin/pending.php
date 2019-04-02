@@ -41,11 +41,9 @@ if (!isAdmin()) {
         <div id="content">
 
             <nav aria-label="breadcrumb">
-               
                 <button type="button" id="sidebarCollapse" class="btn btn-info float-left mr-2" style="padding: 0.65rem 1rem;">
                     <i class="fas fa-align-left"></i>
                 </button>
-               
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="home.php">Home</a></li>
                     <li class="breadcrumb-item disabled" aria-current="page">Requests</li>
@@ -152,7 +150,6 @@ if (!isAdmin()) {
                         </table>
                     </div>
                 </div>
-           
         </div>
     </div>
     

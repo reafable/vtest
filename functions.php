@@ -1198,7 +1198,7 @@ function displayServiceInprogress(){
 
 function displayAssetInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, assetdesc, postby FROM requests WHERE type='asset' AND status='inprogress'";
+    $query = "SELECT id, custname, postdate, compdate, actdate, assetdesc, postby, pendate, penby, inpdate,inpby FROM requests WHERE type='asset' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
