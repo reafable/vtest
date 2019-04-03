@@ -61,6 +61,8 @@ if (!isAdmin()) {
                                     <th>Customer Name</th>
                                     <th>Posted On</th>
                                     <th>Posted By</th>
+                                    <th>Branch</th>
+                                    <th>Department</th>
                                     <th>Expected Completion</th>
                                     <th>Target Completion</th>
                                     <th>Date Pending</th>
@@ -87,6 +89,8 @@ if (!isAdmin()) {
                                     <th>Customer Name</th>
                                     <th>Posted On</th>
                                     <th>Posted By</th>
+                                    <th>Branch</th>
+                                    <th>Department</th>
                                     <th>Expected Completion</th>
                                     <th>Target Completion</th>
                                     <th>Date Pending</th>

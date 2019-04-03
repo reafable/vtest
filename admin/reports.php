@@ -84,70 +84,104 @@ if (!isAdmin()) {
                 
                 <div class="row mt-5">
                 
-                <div class="col-6">
+                    <div class="col-6">
                 
-                <div class="card">
+                        <div class="card">
                 
-                <div class="card-body">
+                            <div class="card-body">
                 
-                <canvas id="requestTypes"></canvas>
+                                <canvas id="requestTypes"></canvas>
 
-                <h5 class="card-title">Request Types</h5>
+                                <h5 class="card-title">Request Types</h5>
                 
-                </div>
+                            </div>
                 
-                </div>
+                        </div>
                 
-                </div>
-                <div class="col-6">
+                    </div>
+                    <div class="col-6">
                 
-                <div class="card">
+                        <div class="card">
                 
-                <div class="card-body">
+                            <div class="card-body">
                 
-                <canvas id="serviceTypes"></canvas>
+                                <canvas id="serviceTypes"></canvas>
                 
-                <h5 class="card-title">Service Types</h5>
+                                <h5 class="card-title">Service Types</h5>
                 
-                </div>
+                            </div>
                 
-                </div>
+                        </div>
                 
-                </div>
+                    </div>
                 
                 </div>
                 <div class="row mt-5">
                 
-                <div class="col-6">
+                    <div class="col-6">
                 
-                <div class="card">
+                        <div class="card">
                 
-                <div class="card-body">
+                            <div class="card-body">
                 
-                <canvas id="requestBranches"></canvas>
+                                <canvas id="requestsByBranch"></canvas>
 
-                <h5 class="card-title">Branch Requests</h5>
+                                <h5 class="card-title">Request Type by Branch</h5>
                 
-                </div>
+                            </div>
                 
-                </div>
+                        </div>
                 
-                </div>
-                <div class="col-6">
+                    </div>
+                    <div class="col-6">
                 
-                <div class="card">
+                        <div class="card">
                 
-                <div class="card-body">
+                            <div class="card-body">
                 
-                <canvas id="completionRate"></canvas>
+                                <canvas id="servicesByBranch"></canvas>
 
-                <h5 class="card-title">Request Types</h5>
+                                <h5 class="card-title">Service Type by Branch</h5>
+                
+                            </div>
+                
+                        </div>
+                
+                    </div>
                 
                 </div>
+                <div class="row mt-5">
                 
-                </div>
+                    <div class="col-6">
                 
-                </div>
+                        <div class="card">
+                
+                            <div class="card-body">
+                
+                                <canvas id="requestBranches"></canvas>
+
+                                <h5 class="card-title">Branch Requests</h5>
+                
+                            </div>
+                
+                        </div>
+                
+                    </div>
+                    <div class="col-6">
+                
+                        <div class="card">
+                
+                            <div class="card-body">
+                
+                                <canvas id="completionRate"></canvas>
+
+                                <h5 class="card-title">Status of Requests</h5>
+                
+                            </div>
+                
+                        </div>
+                
+                    </div>
                 
                 </div>
                 
@@ -215,10 +249,36 @@ if (!isAdmin()) {
             let slCount = <?php displayCountSLFromTo(); ?>;
             let vCount = <?php displayCountVFromTo(); ?>;
             let mCount = <?php displayCountMFromTo(); ?>;
+            let rejectedCount = <?php displayCountRejectedFromTo(); ?>;
             let poolCount = <?php displayCountPoolFromTo(); ?>;
             let pendingCount = <?php displayCountPendingFromTo(); ?>;
             let ongoingCount = <?php displayCountInProgressFromTo(); ?>;
             let completedCount = <?php displayCountCompletedFromTo(); ?>;
+            let assetCountNCR = <?php displayCountAssetNCRFromTo(); ?>;
+            let serviceCountNCR = <?php displayCountServiceNCRFromTo(); ?>;
+            let assetCountNL = <?php displayCountAssetNLFromTo(); ?>;
+            let serviceCountNL = <?php displayCountServiceNLFromTo(); ?>;
+            let assetCountSL = <?php displayCountAssetSLFromTo(); ?>;
+            let serviceCountSL = <?php displayCountServiceSLFromTo(); ?>;
+            let assetCountV = <?php displayCountAssetVFromTo(); ?>;
+            let serviceCountV = <?php displayCountServiceVFromTo(); ?>;
+            let assetCountM = <?php displayCountAssetMFromTo(); ?>;
+            let serviceCountM = <?php displayCountServiceMFromTo(); ?>;
+            let serviceCountITNCR = <?php displayCountServiceITNCRFromTo(); ?>;
+            let serviceCountD2DNCR = <?php displayCountServiceD2DNCRFromTo(); ?>;
+            let serviceCountCarNCR = <?php displayCountServiceCarNCRFromTo(); ?>;
+            let serviceCountITNL = <?php displayCountServiceITNLFromTo(); ?>;
+            let serviceCountD2DNL = <?php displayCountServiceD2DNLFromTo(); ?>;
+            let serviceCountCarNL = <?php displayCountServiceCarNLFromTo(); ?>;
+            let serviceCountITSL = <?php displayCountServiceITSLFromTo(); ?>;
+            let serviceCountD2DSL = <?php displayCountServiceD2DSLFromTo(); ?>;
+            let serviceCountCarSL = <?php displayCountServiceCarSLFromTo(); ?>;
+            let serviceCountITV = <?php displayCountServiceITVFromTo(); ?>;
+            let serviceCountD2DV = <?php displayCountServiceD2DVFromTo(); ?>;
+            let serviceCountCarV = <?php displayCountServiceCarVFromTo(); ?>;
+            let serviceCountITM = <?php displayCountServiceITMFromTo(); ?>;
+            let serviceCountD2DM = <?php displayCountServiceD2DMFromTo(); ?>;
+            let serviceCountCarM = <?php displayCountServiceCarMFromTo(); ?>;
 
             let requestTypes = document.getElementById('requestTypes').getContext('2d');
 
@@ -257,7 +317,7 @@ if (!isAdmin()) {
                     datasets:[{
                         label:'Requesting Branches',
                         data:[ncrCount, nlCount, slCount, vCount, mCount],
-                        backgroundColor:['#FF530D','#E82C0C','FF0000','E80C7A','FF0DFF']
+                        backgroundColor:['#FF530D','#E82C0C','#FF0000','#E80C7A','#FF0DFF']
                     }]
                 }
             });
@@ -267,11 +327,59 @@ if (!isAdmin()) {
             let completionRateChart = new Chart(completionRate, {
                 type:'doughnut',
                 data:{
-                    labels:['Completed', 'Ongoing', 'Pending', 'Pooled'],
+                    labels:['Completed', 'Ongoing', 'Pending', 'Pooled', 'Rejected'],
                     datasets:[{
                         label:'Completion Rate',
-                        data:[completedCount, ongoingCount, pendingCount, poolCount]
+                        data:[completedCount, ongoingCount, pendingCount, poolCount, rejectedCount],
+                        backgroundColor:['#FF530D','#E82C0C','#FF0000','#E80C7A','#FF0DFF']
                     }]
+                }
+            });
+
+            let requestsByBranch = document.getElementById('requestsByBranch').getContext('2d');
+
+            let requestsByBranchChart = new Chart(requestsByBranch, {
+                type:'bar',
+                data:{
+                    labels:['NCR', 'North Luzon', 'South Luzon', 'Visayas', 'Mindanao'],
+                    datasets:[
+                        {
+                        label:'Asset',
+                        backgroundColor:['#f4ce22','#f4ce22','#f4ce22','#f4ce22','#f4ce22','#f4ce22'],
+                        data:[assetCountNCR, assetCountNL, assetCountSL, assetCountV, assetCountM]
+                        },
+                        {
+                        label:'Service',
+                        backgroundColor:['#164c9e','#164c9e','#164c9e','#164c9e','#164c9e','#164c9e',],
+                        data:[serviceCountNCR, serviceCountNL, serviceCountSL, serviceCountV, serviceCountM]
+                        },
+                    ]
+                }
+            });
+
+            let servicesByBranch = document.getElementById('servicesByBranch').getContext('2d');
+
+            let servicesByBranchChart = new Chart(servicesByBranch, {
+                type:'bar',
+                data:{
+                    labels:['NCR', 'North Luzon', 'South Luzon', 'Visayas', 'Mindanao'],
+                    datasets:[
+                        {
+                        label:'IT',
+                        backgroundColor:['#f4ce22','#f4ce22','#f4ce22','#f4ce22','#f4ce22','#f4ce22'],
+                        data:[serviceCountITNCR, serviceCountITNL, serviceCountITSL, serviceCountITV, serviceCountITM]
+                        },
+                        {
+                        label:'Day-to-day',
+                        backgroundColor:['#164c9e','#164c9e','#164c9e','#164c9e','#164c9e','#164c9e',],
+                        data:[serviceCountD2DNCR, serviceCountD2DNL, serviceCountD2DSL, serviceCountD2DV, serviceCountD2DM]
+                        },
+                        {
+                        label:'Car',
+                        backgroundColor:['#1ca05c','#1ca05c','#1ca05c','#1ca05c','#1ca05c','#1ca05c',],
+                        data:[serviceCountCarNCR, serviceCountCarNL, serviceCountCarSL, serviceCountCarV, serviceCountCarM]
+                        }
+                    ]
                 }
             });
 

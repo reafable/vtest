@@ -590,7 +590,7 @@ if(isset($_POST['toggle'])){
 //pull data from users table
 function displayUsers(){
     global $db;
-    $query = "SELECT id, status, username, fname, lname, password, user_type FROM users";
+    $query = "SELECT id, status, username, fname, lname, password, user_type, branch, department FROM users";
     $results = mysqli_query($db, $query);
     
     if($results-> num_rows > 0){
@@ -603,6 +603,8 @@ function displayUsers(){
             $user_type = $row['user_type'];
             $status = $row['status'];
             $password = $row['password'];
+            $branch = $row['branch'];
+            $department = $row['department'];
             
             if($_SESSION['user']['user_type'] == 'sadmin'){
                 
@@ -1210,7 +1212,7 @@ function displayServicePending(){
 
 function displayServiceInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, serv_type, servdesc, postby, penby, inpby, pendate, inpdate FROM requests WHERE type='service' AND status='inprogress'";
+    $query = "SELECT * FROM requests WHERE type='service' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -1233,11 +1235,17 @@ function displayServiceInprogress(){
             $inpdate = $row['inpdate'];
             $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
-            echo
+            $branch = $row['branch'];
+            $department = $row['department'];
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
+                "<td>" . $branch . "</td>".
+                "<td>" . $department . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
                 "<td>" . $pendate . "</td>".
@@ -1300,15 +1308,89 @@ function displayServiceInprogress(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
-                ;
+                                    "</div>" .
+                                "</tr>";
+            }else{
+                echo
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $branch . "</td>".
+                "<td>" . $department . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
+                "<td>" . $serv_type . "</td>".
+                "<td>" . $servdesc . "</td>".
+                "<td>" . 
+                "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                " "    .
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Customer Name: " . $custname . "</p>" .
+                                                    "<p>Posted On: " . $postdate . "</p>" .
+                                                    "<p>Posted By: " . $postby . "</p>" .
+                                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Service Type: " . $serv_type . "</p>" .
+                                                    "<p>Service Description: " . $servdesc . "</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    // "<button type='submit' class='btn btn-primary' name='mcompleted'>Mark as Completed</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                                "</tr>";
+            }
+
         }
     }
 }
 
 function displayAssetInprogress(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, assetdesc, postby, pendate, penby, inpdate,inpby FROM requests WHERE type='asset' AND status='inprogress'";
+    $query = "SELECT * FROM requests WHERE type='asset' AND status='inprogress'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -1330,11 +1412,17 @@ function displayAssetInprogress(){
             $penby = $row['penby'];
             $inpdate = $row['inpdate'];
             $inpby = $row['inpby'];
-            echo
+            $branch = $row['branch'];
+            $department = $row['department'];
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
+                "<td>" . $branch . "</td>".
+                "<td>" . $department . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
                 "<td>" . $pendate . "</td>".
@@ -1395,8 +1483,81 @@ function displayAssetInprogress(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
-                ;
+                                    "</div>" .
+                                    "</tr>";
+            }else{
+                echo
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $branch . "</td>".
+                "<td>" . $department . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
+                "<td>" . $assetdesc . "</td>".
+                "<td>" . 
+                "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                " "    .
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Customer Name: " . $custname . "</p>" .
+                                                    "<p>Posted On: " . $postdate . "</p>" .
+                                                    "<p>Posted By: " . $postby . "</p>" .
+                                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Service Description: " . $assetdesc . "</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    // "<button type='submit' class='btn btn-primary' name='mcompleted'>Mark as Completed</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                                    "</tr>";
+            }
+
+            
         }
     }
 }
@@ -1996,6 +2157,832 @@ function displayCountAssetFromTo(){
         if(!empty($dateRange1) && !empty($dateRange2)){
 
             $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountAssetNCRFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset' AND branch='NCR'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceNCRFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND branch='NCR'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceITNCRFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='IT' AND branch='NCR'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceITNLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='IT' AND branch='North Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceITSLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='IT' AND branch='South Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceITVFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='IT' AND branch='Visayas'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceITMFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='IT' AND branch='Mindanao'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceD2DNCRFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='day-to-day' AND branch='NCR'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceD2DNLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='day-to-day' AND branch='North Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceD2DSLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='day-to-day' AND branch='South Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceD2DVFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='day-to-day' AND branch='Visayas'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceD2DMFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='day-to-day' AND branch='Mindanao'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceCarNCRFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='car' AND branch='NCR'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceCarNLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='car' AND branch='North Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceCarSLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='car' AND branch='South Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceCarVFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='car' AND branch='Visayas'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceCarMFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND serv_type='car' AND branch='Mindanao'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceNLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND branch='North Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountAssetNLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+
+function displayCountAssetSLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset' AND branch='South Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceSLFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND branch='South Luzon'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountAssetVFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset' AND branch='Visayas'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceVFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND branch='Visayas'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountAssetMFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='asset' AND branch='Mindanao'";
+            $results = mysqli_query($db, $query);
+            $row = mysqli_fetch_array($results);
+
+            $total = $row[0];
+
+            echo $total; 
+
+        }
+        
+    }
+     
+}
+
+function displayCountServiceMFromTo(){
+    global $db;
+    
+    if(isset($_POST['dateRangeButton'])){
+        
+        if(isset($_POST['dateRange1'])){
+
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+
+        }
+
+        if(isset($_POST['dateRange2'])){
+
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+
+        }
+
+        if(!empty($dateRange1) && !empty($dateRange2)){
+
+            $query = "SELECT COUNT(1) FROM requests WHERE (postdate BETWEEN '$dateRange1' AND '$dateRange2') AND type='service' AND branch='Mindanao'";
             $results = mysqli_query($db, $query);
             $row = mysqli_fetch_array($results);
 

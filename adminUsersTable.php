@@ -12,6 +12,12 @@
         <?php echo $user_type; ?>
     </td> 
     <td>
+        <?php echo $branch; ?>
+    </td> 
+    <td>
+        <?php echo $department; ?>
+    </td> 
+    <td>
         <?php echo $status; ?>
     </td>
     <td>

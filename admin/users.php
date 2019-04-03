@@ -69,6 +69,8 @@ if (!isAdmin()) {
                                     <th>Last Name</th>
                                     <th>Username</th>
                                     <th>User Type</th>
+                                    <th>Branch</th>
+                                    <th>Department</th>
                                     <th>Status</th>
                                     <!-- <th>Password</th> -->
                                     <th>Actions</th>
