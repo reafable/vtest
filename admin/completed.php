@@ -58,7 +58,7 @@ if (!isAdmin()) {
                     <div class="col col-sm-12">
                         <h2>Service Requests</h2>
                         <table id="serviceCompletedTable" class="table table-striped">
-                            <thead>
+                            <thead style="word-break:break-word; font-size:60%;">
                                 <th>Customer Name</th>
                                 <th>Posted On</th>
                                 <th>Posted By</th>
@@ -86,7 +86,7 @@ if (!isAdmin()) {
                     <div class="col col-sm-12">
                         <h2>Asset Requests</h2>
                         <table id="assetCompletedTable" class="table table-striped">
-                            <thead>
+                            <thead style="word-break:break-word; font-size:60%;">
                                 <th>Customer Name</th>
                                 <th>Posted On</th>
                                 <th>Posted By</th>
