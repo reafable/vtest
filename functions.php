@@ -26,6 +26,11 @@ if(isset($_POST['mback'])){
     header('location: ' . $_SERVER['PHP_SELF']);
 }
 
+if(isset($_POST['mbacktopool'])){
+    superMoveRequestToPool();
+    header('location: ' . $_SERVER['PHP_SELF']);
+}
+
 if(isset($_POST['mpending'])){
     moveRequestToPending();
     header('location: ' . $_SERVER['PHP_SELF']);
@@ -81,6 +86,15 @@ function superMoveRequestToInProgress(){
     global $db;
     $move_req_id = $_POST['move_req_id'];
     $query = "UPDATE requests SET status='inprogress', finby='NULL', findate=NULL 
+              WHERE 
+              id='$move_req_id'";
+    mysqli_query($db, $query);
+}
+
+function superMoveRequestToPool(){
+    global $db;
+    $move_req_id = $_POST['move_req_id'];
+    $query = "UPDATE requests SET status='pending', finby='NULL', findate=NULL 
               WHERE 
               id='$move_req_id'";
     mysqli_query($db, $query);
@@ -969,7 +983,9 @@ function displayServicePooled(){
             $compdate = $row['compdate'];
             $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
-        echo
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo
             "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
@@ -978,8 +994,8 @@ function displayServicePooled(){
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
-                    "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
-                    " "    .
+                    // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                    // " "    .
                     "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -1032,6 +1048,135 @@ function displayServicePooled(){
                     "</div>" .
                 "</div>" .
             "</tr>";
+            }else{
+                echo
+            "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $serv_type . "</td>".
+                "<td>" . $servdesc . "</td>".
+                "<td>" . 
+                    // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                    // " "    .
+                    "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                        "<form method='post'>" .
+                            "<div class='modal-content'>" .
+                                "<div class='modal-header'>" .
+                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                        "<span aria-hidden='true'>&times;</span>" .
+                                    "</button>" .
+                                "</div>" .
+                                "<div class='modal-body'>" .
+                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                    "<p>Are you sure you want to reject this request?</p>" .
+                                "</div>" .
+                                "<div class='modal-footer'>" .
+                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                "</div>" .
+                            "</div>" .
+                        "</form>" .
+                    "</div>" .
+                "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                        "<form method='post'>" .
+                            "<div class='modal-content'>" .
+                                "<div class='modal-header'>" .
+                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                        "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                            "<span aria-hidden='true'>&times;</span>" .
+                                        "</button>" .
+                                "</div>" .
+                                "<div class='modal-body'>" .
+                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                    "<p>Customer Name: " . $custname . "</p>" .
+                                    "<p>Posted On: " . $postdate . "</p>" .
+                                    "<p>Posted By: " . $postby . "</p>" .
+                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                    "<p>Service Type: " . $serv_type . "</p>" .
+                                    "<p>Service Description: " . $servdesc . "</p>" .
+                                "</div>" .
+                                "<div class='modal-footer'>" .
+                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                    "<button type='submit' class='btn btn-primary' name='mpending'>Move to Pending</button>" .
+                                "</div>" .
+                            "</div>" .
+                        "</form>" .
+                    "</div>" .
+                "</div>" .
+            "</tr>";
+            }
+
+        // echo
+        //     "<tr>" .
+        //         "<td>" . $custname . "</td>".
+        //         "<td>" . $postdate . "</td>".
+        //         "<td>" . $postby . "</td>".
+        //         "<td>" . $compdate . "</td>".
+        //         "<td>" . $serv_type . "</td>".
+        //         "<td>" . $servdesc . "</td>".
+        //         "<td>" . 
+        //             "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+        //             " "    .
+        //             "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+        //         "</td>" .
+        //         "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+        //             "<div class='modal-dialog' role='document'>" .
+        //                 "<form method='post'>" .
+        //                     "<div class='modal-content'>" .
+        //                         "<div class='modal-header'>" .
+        //                             "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+        //                             "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+        //                                 "<span aria-hidden='true'>&times;</span>" .
+        //                             "</button>" .
+        //                         "</div>" .
+        //                         "<div class='modal-body'>" .
+        //                             "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+        //                             "<p>Are you sure you want to reject this request?</p>" .
+        //                         "</div>" .
+        //                         "<div class='modal-footer'>" .
+        //                             "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+        //                             "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+        //                         "</div>" .
+        //                     "</div>" .
+        //                 "</form>" .
+        //             "</div>" .
+        //         "</div>" .
+        //         "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+        //             "<div class='modal-dialog' role='document'>" .
+        //                 "<form method='post'>" .
+        //                     "<div class='modal-content'>" .
+        //                         "<div class='modal-header'>" .
+        //                             "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+        //                                 "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+        //                                     "<span aria-hidden='true'>&times;</span>" .
+        //                                 "</button>" .
+        //                         "</div>" .
+        //                         "<div class='modal-body'>" .
+        //                             "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+        //                             "<p>Customer Name: " . $custname . "</p>" .
+        //                             "<p>Posted On: " . $postdate . "</p>" .
+        //                             "<p>Posted By: " . $postby . "</p>" .
+        //                             "<p>Expected Completion: " . $compdate . "</p>" .
+        //                             "<p>Service Type: " . $serv_type . "</p>" .
+        //                             "<p>Service Description: " . $servdesc . "</p>" .
+        //                         "</div>" .
+        //                         "<div class='modal-footer'>" .
+        //                             "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+        //                             "<button type='submit' class='btn btn-primary' name='mpending'>Move to Pending</button>" .
+        //                         "</div>" .
+        //                     "</div>" .
+        //                 "</form>" .
+        //             "</div>" .
+        //         "</div>" .
+        //     "</tr>";
         }
     }
 }
@@ -1049,7 +1194,9 @@ function displayAssetPooled(){
             $postby = $row['postby'];
             $compdate = $row['compdate'];
             $assetdesc = $row['assetdesc'];
-        echo
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo
             "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
@@ -1057,8 +1204,8 @@ function displayAssetPooled(){
                 "<td>" . $compdate . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
-                    "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
-                    " "    .
+                    // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                    // " "    .
                     "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -1110,6 +1257,131 @@ function displayAssetPooled(){
                     "</div>" .
                 "</div>" . 
             "</tr>";
+            }else{
+                echo
+            "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $assetdesc . "</td>".
+                "<td>" . 
+                    // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                    // " "    .
+                    "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                        "<form method='post'>" .
+                            "<div class='modal-content'>" .
+                            "<div class='modal-header'>" .
+                                "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                    "<span aria-hidden='true'>&times;</span>" .
+                                "</button>" .
+                            "</div>" .
+                            "<div class='modal-body'>" .
+                                "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                "<p>Are you sure you want to reject this request?</p>" .
+                            "</div>" .
+                            "<div class='modal-footer'>" .
+                                "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                            "</div>" .
+                        "</div>" .
+                        "</form>" .
+                    "</div>" .
+                "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                    "<div class='modal-dialog' role='document'>" .
+                        "<form method='post'>" .
+                            "<div class='modal-content'>" .
+                            "<div class='modal-header'>" .
+                                "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                    "<span aria-hidden='true'>&times;</span>" .
+                                "</button>" .
+                            "</div>" .
+                            "<div class='modal-body'>" .
+                                "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                "<p>Customer Name: " . $custname . "</p>" .
+                                "<p>Posted On: " . $postdate . "</p>" .
+                                "<p>Posted By: " . $postby . "</p>" .
+                                "<p>Expected Completion: " . $compdate . "</p>" .
+                                "<p>Assets Required: " . $assetdesc . "</p>" .
+                            "</div>" .
+                            "<div class='modal-footer'>" .
+                                "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                "<button type='submit' class='btn btn-primary' name='mpending'>Move to Pending</button>" .
+                            "</div>" .
+                        "</div>" .
+                        "</form>" .
+                    "</div>" .
+                "</div>" . 
+            "</tr>";
+            }
+
+        // echo
+        //     "<tr>" .
+        //         "<td>" . $custname . "</td>".
+        //         "<td>" . $postdate . "</td>".
+        //         "<td>" . $postby . "</td>".
+        //         "<td>" . $compdate . "</td>".
+        //         "<td>" . $assetdesc . "</td>".
+        //         "<td>" . 
+        //             "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+        //             " "    .
+        //             "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+        //         "</td>" .
+        //         "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+        //             "<div class='modal-dialog' role='document'>" .
+        //                 "<form method='post'>" .
+        //                     "<div class='modal-content'>" .
+        //                     "<div class='modal-header'>" .
+        //                         "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+        //                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+        //                             "<span aria-hidden='true'>&times;</span>" .
+        //                         "</button>" .
+        //                     "</div>" .
+        //                     "<div class='modal-body'>" .
+        //                         "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+        //                         "<p>Are you sure you want to reject this request?</p>" .
+        //                     "</div>" .
+        //                     "<div class='modal-footer'>" .
+        //                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+        //                         "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+        //                     "</div>" .
+        //                 "</div>" .
+        //                 "</form>" .
+        //             "</div>" .
+        //         "</div>" .
+        //         "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+        //             "<div class='modal-dialog' role='document'>" .
+        //                 "<form method='post'>" .
+        //                     "<div class='modal-content'>" .
+        //                     "<div class='modal-header'>" .
+        //                         "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+        //                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+        //                             "<span aria-hidden='true'>&times;</span>" .
+        //                         "</button>" .
+        //                     "</div>" .
+        //                     "<div class='modal-body'>" .
+        //                         "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+        //                         "<p>Customer Name: " . $custname . "</p>" .
+        //                         "<p>Posted On: " . $postdate . "</p>" .
+        //                         "<p>Posted By: " . $postby . "</p>" .
+        //                         "<p>Expected Completion: " . $compdate . "</p>" .
+        //                         "<p>Assets Required: " . $assetdesc . "</p>" .
+        //                     "</div>" .
+        //                     "<div class='modal-footer'>" .
+        //                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+        //                         "<button type='submit' class='btn btn-primary' name='mpending'>Move to Pending</button>" .
+        //                     "</div>" .
+        //                 "</div>" .
+        //                 "</form>" .
+        //             "</div>" .
+        //         "</div>" . 
+        //     "</tr>";
         }
     }
 }
@@ -1136,7 +1408,9 @@ function displayServicePending(){
             $penby = $row['penby'];
             $serv_type = $row['serv_type'];
             $servdesc = $row['servdesc'];
-            echo
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
@@ -1204,8 +1478,151 @@ function displayServicePending(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
-                ;
+                                    "</div>" .
+                                    "</tr>";
+            }else{
+                echo
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $serv_type . "</td>".
+                "<td>" . $servdesc . "</td>".
+                "<td>" . 
+                // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                // " "    .
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Customer Name: " . $custname . "</p>" .
+                                                    "<p>Posted On: " . $postdate . "</p>" .
+                                                    "<p>Posted By: " . $postby . "</p>" .
+                                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Moved To Pending On: " . $pendate . "</p>" .
+                                                    "<p>Moved To Pending By: " . $penby . "</p>" .
+                                                    "<p>Service Type: " . $serv_type . "</p>" .
+                                                    "<p>Service Description: " . $servdesc . "</p>" .
+                "<label for='targetDate'>Target Completion Date</label>" .
+                "<input type='date' class='form-control' id='targetDateService' name='targetDate' placeholder='Enter date' required>" .
+                                                    //insert form here: target completion date
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-primary' name='minprogress'>Move to Ongoing</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                                    "</tr>";
+            }
+
+            // echo
+            //     "<tr>" .
+            //     "<td>" . $custname . "</td>".
+            //     "<td>" . $postdate . "</td>".
+            //     "<td>" . $postby . "</td>".
+            //     "<td>" . $compdate . "</td>".
+            //     "<td>" . $pendate . "</td>".
+            //     "<td>" . $penby . "</td>".
+            //     "<td>" . $serv_type . "</td>".
+            //     "<td>" . $servdesc . "</td>".
+            //     "<td>" . 
+            //     "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+            //     " "    .
+            //     "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+            //     "</td>" .
+            //     "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+            //                                         "<p>Are you sure you want to reject this request?</p>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>" .
+            //     "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+            //                                         "<p>Customer Name: " . $custname . "</p>" .
+            //                                         "<p>Posted On: " . $postdate . "</p>" .
+            //                                         "<p>Posted By: " . $postby . "</p>" .
+            //                                         "<p>Expected Completion: " . $compdate . "</p>" .
+            //                                         "<p>Moved To Pending On: " . $pendate . "</p>" .
+            //                                         "<p>Moved To Pending By: " . $penby . "</p>" .
+            //                                         "<p>Service Type: " . $serv_type . "</p>" .
+            //                                         "<p>Service Description: " . $servdesc . "</p>" .
+            //     "<label for='targetDate'>Target Completion Date</label>" .
+            //     "<input type='date' class='form-control' id='targetDateService' name='targetDate' placeholder='Enter date' required>" .
+            //                                         //insert form here: target completion date
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-primary' name='minprogress'>Move to Ongoing</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>"
+            //     ;
         }
     }
 }
@@ -1255,8 +1672,8 @@ function displayServiceInprogress(){
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
-                "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
-                " "    .
+                // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                // " "    .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -1327,8 +1744,8 @@ function displayServiceInprogress(){
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
-                "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
-                " "    .
+                // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                // " "    .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -1431,8 +1848,8 @@ function displayAssetInprogress(){
                 "<td>" . $inpby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
-                "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
-                " "    .
+                // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                // " "    .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -1501,8 +1918,8 @@ function displayAssetInprogress(){
                 "<td>" . $inpby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
-                "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
-                " "    .
+                // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                // " "    .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -1608,7 +2025,7 @@ function displayServiceCompleted(){
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
                 " "    . */
-                "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reopen</button></a>" . 
+                "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Undo</button></a>" . 
                 " " .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
@@ -1849,7 +2266,9 @@ function displayAssetPending(){
             $pendate = $row['pendate'];
             $penby = $row['penby'];
             $assetdesc = $row['assetdesc'];
-            echo 
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+                echo 
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
@@ -1914,8 +2333,145 @@ function displayAssetPending(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
-                ;
+                                    "</div>".
+                                    "</tr>";
+            }else{
+                echo 
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $assetdesc . "</td>".
+                "<td>" . 
+                // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                // " "    .
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Customer Name: " . $custname . "</p>" .
+                                                    "<p>Posted On: " . $postdate . "</p>" .
+                                                    "<p>Posted By: " . $postby . "</p>" .
+                                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Moved To Pending On: " . $pendate . "</p>" .
+                                                    "<p>Moved To Pending By: " . $penby . "</p>" .
+                                                    "<p>Assets Required: " . $assetdesc . "</p>" .
+                "<label for='targetDate'>Target Completion Date</label>" .
+                "<input type='date' class='form-control' id='targetDateAsset' name='targetDate' placeholder='Enter date' required>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-primary' name='minprogress'>Move to Ongoing</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>".
+                                    "</tr>";
+            }
+
+            // echo 
+            //     "<tr>" .
+            //     "<td>" . $custname . "</td>".
+            //     "<td>" . $postdate . "</td>".
+            //     "<td>" . $postby . "</td>".
+            //     "<td>" . $compdate . "</td>".
+            //     "<td>" . $pendate . "</td>".
+            //     "<td>" . $penby . "</td>".
+            //     "<td>" . $assetdesc . "</td>".
+            //     "<td>" . 
+            //     "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+            //     " "    .
+            //     "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+            //     "</td>" .
+            //     "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+            //                                         "<p>Are you sure you want to reject this request?</p>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>" .
+            //     "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+            //                                         "<p>Customer Name: " . $custname . "</p>" .
+            //                                         "<p>Posted On: " . $postdate . "</p>" .
+            //                                         "<p>Posted By: " . $postby . "</p>" .
+            //                                         "<p>Expected Completion: " . $compdate . "</p>" .
+            //                                         "<p>Moved To Pending On: " . $pendate . "</p>" .
+            //                                         "<p>Moved To Pending By: " . $penby . "</p>" .
+            //                                         "<p>Assets Required: " . $assetdesc . "</p>" .
+            //     "<label for='targetDate'>Target Completion Date</label>" .
+            //     "<input type='date' class='form-control' id='targetDateAsset' name='targetDate' placeholder='Enter date' required>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-primary' name='minprogress'>Move to Ongoing</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>"
+            //     ;
         }
     }
 }
@@ -1934,7 +2490,71 @@ function displayServiceRejected(){
             $postby = $row['postby'];
             $compdate = $row['compdate'];
             $servdesc = $row['servdesc'];
-            echo 
+
+            if($_SESSION['user']['user_type'] == 'sadmin'){
+
+                echo 
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $servdesc . "</td>".
+                "<td>" . 
+                "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Undo</button></a>" . 
+                " " .
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Request details</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-primary' name='save'>Save Changes</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                                    include('../moveBackToPoolModal.php');
+                                    "</tr>";
+
+            }else{
+
+                echo 
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
@@ -1987,8 +2607,66 @@ function displayServiceRejected(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
-                ;
+                                    "</div>" .
+                                    "</tr>";
+
+            }
+
+            // echo 
+            //     "<tr>" .
+            //     "<td>" . $custname . "</td>".
+            //     "<td>" . $postdate . "</td>".
+            //     "<td>" . $postby . "</td>".
+            //     "<td>" . $compdate . "</td>".
+            //     "<td>" . $servdesc . "</td>".
+            //     "<td>" . 
+            //     "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+            //     "</td>" .
+            //     "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+            //                                         "<p>Are you sure you want to reject this request?</p>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>" .
+            //     "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+            //                                         "<p>Request details</p>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-primary' name='save'>Save Changes</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>"
+            //     ;
         }
     }
 }
@@ -2993,7 +3671,25 @@ function displayCountServiceMFromTo(){
         }
         
     }
-     
+
+}
+
+function displayDateRange1(){
+    if(isset($_POST['dateRangeButton'])){
+        if(isset($_POST['dateRange1'])){
+            $dateRange1 = date('Y-m-d', strtotime($_POST['dateRange1']));
+        }
+        echo $dateRange1;
+    }
+}
+
+function displayDateRange2(){
+    if(isset($_POST['dateRangeButton'])){
+        if(isset($_POST['dateRange2'])){
+            $dateRange2 = date('Y-m-d', strtotime($_POST['dateRange2']));
+        }
+        echo $dateRange2;
+    }
 }
 
 function displayCountServiceFromTo(){

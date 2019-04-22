@@ -49,21 +49,21 @@ if (!isAdmin()) {
                     </ol>
                 </nav>
                 
-                 <form action="reports.php" method="post">
+                 <form id="dateRange" name="dateRange" action="reports.php" method="post">
                     
                     <div class="form-row">
                         
                         <div class="form-group col" >
                         
                             <label for="dateRange1">From</label>
-                            <input type="date" class="form-control" id="dateRange1" name="dateRange1" required>
+                            <input type="date" class="form-control" id="dateRange1" name="dateRange1" value="<?php displayDateRange1(); ?>" required>
                             
                         </div>
                         
                         <div class="form-group col" >
                             
                             <label for="dateRange2">To</label>
-                            <input type="date" class="form-control" id="dateRange2" name="dateRange2" required>
+                            <input type="date" class="form-control" id="dateRange2" name="dateRange2" value="<?php displayDateRange2(); ?>" required>
                             
                         </div>
                         

@@ -25,11 +25,11 @@
                     <p>Moved to Completed by: <?php echo $finby ?></p>
                     <p>Service Type: <?php echo $serv_type ?></p>
                     <p>Service Description: <?php  echo $servdesc?></p> -->
-                    <p>Are you sure you want to undo completion?</p>
+                    <p>Are you sure you want to undo the rejection?</p>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
-                    <button type='submit' class='btn btn-danger' name='mback'>Undo</button>
+                    <button type='submit' class='btn btn-danger' name='mbacktopool'>Undo</button>
                 </div>
             </div>
         </form>
