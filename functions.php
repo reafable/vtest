@@ -1488,7 +1488,7 @@ function displayServicePending(){
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $pendate . "</td>".
-                "<td>" . $penby . "</td>".
+                // "<td>" . $penby . "</td>".
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
@@ -2193,6 +2193,8 @@ function displayAssetCompleted(){
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
                 " "    . */
+                "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Undo</button></a>" . 
+                " " .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 /* "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -2244,7 +2246,8 @@ function displayAssetCompleted(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
+                                    "</div>" .
+                                    include('../moveBackModal.php');
                 ;
         }
     }
@@ -2343,7 +2346,7 @@ function displayAssetPending(){
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $pendate . "</td>".
-                "<td>" . $penby . "</td>".
+                // "<td>" . $penby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -2692,6 +2695,8 @@ function displayAssetRejected(){
                 "<td>" . $compdate . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
+                "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Undo</button></a>" . 
+                " " .
                 "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
@@ -2737,8 +2742,9 @@ function displayAssetRejected(){
                                             "</div>" .
                                            "</form>" .
                                         "</div>" .
-                                    "</div>"
-                ;
+                                    "</div>" .
+                                    include('../moveBackToPoolModal.php');
+                                    "</tr>";
         }
     }
 }

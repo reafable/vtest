@@ -56,7 +56,37 @@ if (!isAdmin()) {
                         <h2>Service Requests</h2>
                         <table id="servicePendingTable" class="table table-striped">
                             <thead>
-                                <th>Customer Name</th>
+                                <?php
+                                
+                                if($_SESSION['user']['user_type'] == 'sadmin'){
+
+                                    echo
+                                    "<th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Date Pending</th>
+                                    <th>Pending By</th>
+                                    <th>Service Type</th>
+                                    <th>Service Description</th>
+                                    <th>Actions</th>";
+
+                                }else{
+
+                                    echo
+                                    "<th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Date Pending</th>
+                                    <th>Service Type</th>
+                                    <th>Service Description</th>
+                                    <th>Actions</th>";
+
+                                }
+                                
+                                ?>
+                                <!-- <th>Customer Name</th>
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
@@ -64,7 +94,7 @@ if (!isAdmin()) {
                                 <th>Pending By</th>
                                 <th>Service Type</th>
                                 <th>Service Description</th>
-                                <th>Actions</th>
+                                <th>Actions</th> -->
                             </thead>
                             <tbody>
                                 <?php
@@ -79,14 +109,42 @@ if (!isAdmin()) {
                         <h2>Asset Requests</h2>
                         <table id="assetPendingTable" class="table table-striped">
                             <thead>
-                                <th>Customer Name</th>
+                                <?php
+                                
+                                    if($_SESSION['user']['user_type'] == 'sadmin'){
+
+                                        echo
+                                        "<th>Customer Name</th>
+                                        <th>Posted On</th>
+                                        <th>Posted By</th>
+                                        <th>Expected Completion</th>
+                                        <th>Date Pending</th>
+                                        <th>Pending By</th>
+                                        <th>Assets Required</th>
+                                        <th>Actions</th>";
+
+                                    }else{
+
+                                        echo
+                                        "<th>Customer Name</th>
+                                        <th>Posted On</th>
+                                        <th>Posted By</th>
+                                        <th>Expected Completion</th>
+                                        <th>Date Pending</th>
+                                        <th>Assets Required</th>
+                                        <th>Actions</th>";
+
+                                    }
+                                
+                                ?>
+                                <!-- <th>Customer Name</th>
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
                                 <th>Date Pending</th>
                                 <th>Pending By</th>
                                 <th>Assets Required</th>
-                                <th>Actions</th>
+                                <th>Actions</th> -->
                             </thead>
                             <tbody>
                                 <!--<tr>-->
