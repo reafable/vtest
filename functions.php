@@ -105,7 +105,7 @@ function moveRequestToPending(){
     
     $edit_req_id = $_POST['edit_req_id'];
     
-    $date = date('Y-m-d');
+    $date = date('Y-m-d H:i:s');
     
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user']['username'];
@@ -122,7 +122,7 @@ function moveRequestToInProgress(){
     
     $targetDate = date('Y-m-d', strtotime($_POST['targetDate']));
 
-    $date = date('Y-m-d');
+    $date = date('Y-m-d H:i:s');
 
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user']['username'];
@@ -137,7 +137,7 @@ function moveRequestToCompleted(){
     
     $edit_req_id = $_POST['edit_req_id'];
     
-    $date = date('Y-m-d');
+    $date = date('Y-m-d H:i:s');
 
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user']['username'];
@@ -162,7 +162,7 @@ if(isset($_POST['submitsr'])){
 function postServiceRequest(){
     global $db, $custname, $compdate, $servdesc;
     
-    $date = date('Y-m-d');
+    $date = date('Y-m-d H:i:s');
     
     //$date = date('m-d-Y');
     
@@ -200,7 +200,7 @@ if(isset($_POST['submitar'])){
 function postAssetRequest(){
     global $db, $custname, $compdate, $assetdesc;
     
-    $date = date('Y-m-d');
+    $date = date('Y-m-d H:i:s');
     
     $uid = date('Ymd-His');
     
@@ -1738,9 +1738,9 @@ function displayServiceInprogress(){
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
                 "<td>" . $pendate . "</td>".
-                "<td>" . $penby . "</td>".
+                // "<td>" . $penby . "</td>".
                 "<td>" . $inpdate . "</td>".
-                "<td>" . $inpby . "</td>".
+                // "<td>" . $inpby . "</td>".
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
@@ -1913,9 +1913,9 @@ function displayAssetInprogress(){
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
                 "<td>" . $pendate . "</td>".
-                "<td>" . $penby . "</td>".
+                // "<td>" . $penby . "</td>".
                 "<td>" . $inpdate . "</td>".
-                "<td>" . $inpby . "</td>".
+                // "<td>" . $inpby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 // "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
