@@ -59,7 +59,45 @@ if (!isAdmin()) {
                         <h2>Service Requests</h2>
                         <table id="serviceCompletedTable" class="table table-striped">
                             <thead style="word-break:break-word; font-size:60%;">
-                                <th>Customer Name</th>
+                                <?php
+                                
+                                if($_SESSION['user']['user_type'] == 'sadmin'){
+
+                                    echo
+                                    "<th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Target Completion</th>
+                                    <th>Pending On</th>
+                                    <th>Pending By</th>
+                                    <th>Ongoing On</th>
+                                    <th>Ongoing By</th>
+                                    <th>Actual Completion</th>
+                                    <th>Completed By</th>
+                                    <th>Service Type</th>
+                                    <th>Service Description</th>
+                                    <th>Actions</th>";
+
+                                }else{
+
+                                    echo
+                                    "<th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Target Completion</th>
+                                    <th>Pending On</th>
+                                    <th>Ongoing On</th>
+                                    <th>Actual Completion</th>
+                                    <th>Service Type</th>
+                                    <th>Service Description</th>
+                                    <th>Actions</th>";
+
+                                }
+                                
+                                ?>
+                                <!-- <th>Customer Name</th>
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
@@ -72,7 +110,7 @@ if (!isAdmin()) {
                                 <th>Completed By</th>
                                 <th>Service Type</th>
                                 <th>Service Description</th>
-                                <th>Actions</th>
+                                <th>Actions</th> -->
                             </thead>
                             <tbody>
                                 <?php
@@ -87,14 +125,50 @@ if (!isAdmin()) {
                         <h2>Asset Requests</h2>
                         <table id="assetCompletedTable" class="table table-striped">
                             <thead style="word-break:break-word; font-size:60%;">
-                                <th>Customer Name</th>
+                                <?php
+                                
+                                if($_SESSION['user']['user_type'] == 'sadmin'){
+                                    
+                                    echo
+                                    "<th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Target Completion</th>
+                                    <th>Pending On</th>
+                                    <th>Pending By</th>
+                                    <th>Ongoing On</th>
+                                    <th>Ongoing By</th>
+                                    <th>Actual Completion</th>
+                                    <th>Completed By</th>
+                                    <th>Assets Required</th>
+                                    <th>Actions</th>";
+
+                                }else{
+
+                                    echo
+                                    "<th>Customer Name</th>
+                                    <th>Posted On</th>
+                                    <th>Posted By</th>
+                                    <th>Expected Completion</th>
+                                    <th>Target Completion</th>
+                                    <th>Pending On</th>
+                                    <th>Ongoing On</th>
+                                    <th>Actual Completion</th>
+                                    <th>Assets Required</th>
+                                    <th>Actions</th>";
+
+                                }
+
+                                ?>
+                                <!-- <th>Customer Name</th>
                                 <th>Posted On</th>
                                 <th>Posted By</th>
                                 <th>Expected Completion</th>
                                 <th>Target Completion</th>
                                 <th>Actual Completion</th>
                                 <th>Assets Required</th>
-                                <th>Actions</th>
+                                <th>Actions</th> -->
                             </thead>
                             <tbody>
                                 <?php

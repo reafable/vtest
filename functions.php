@@ -2091,17 +2091,17 @@ function displayServiceCompleted(){
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
                 "<td>" . $pendate . "</td>".
-                "<td>" . $penby . "</td>".
+                // "<td>" . $penby . "</td>".
                 "<td>" . $inpdate . "</td>".
-                "<td>" . $inpby . "</td>".
+                // "<td>" . $inpby . "</td>".
                 "<td>" . $findate . "</td>".
-                "<td>" . $finby . "</td>".
+                // "<td>" . $finby . "</td>".
                 "<td>" . $serv_type . "</td>".
                 "<td>" . $servdesc . "</td>".
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
                 " "    . */
-                // "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
                 "</td>" .
                 /* "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
                                         "<div class='modal-dialog' role='document'>" .
@@ -2162,7 +2162,7 @@ function displayServiceCompleted(){
 
 function displayAssetCompleted(){
     global $db;
-    $query = "SELECT id, custname, postdate, compdate, actdate, findate, assetdesc, postby FROM requests WHERE type='asset' AND status='completed'";
+    $query = "SELECT * FROM requests WHERE type='asset' AND status='completed'";
     $results = mysqli_query($db, $query);
     
     /*if($results-> num_rows > 0){
@@ -2181,14 +2181,27 @@ function displayAssetCompleted(){
             $actdate = $row['actdate'];
             $findate = $row['findate'];
             $assetdesc = $row['assetdesc'];
-            echo
+            $pendate = $row['pendate'];
+            $penby = $row['penby'];
+            $inpdate = $row['inpdate'];
+            $inpby = $row['inpby'];
+            $finby = $row['finby'];
+
+            if($_SESSION['user']['user_type']== 'sadmin'){
+
+                echo
                 "<tr>" .
                 "<td>" . $custname . "</td>".
                 "<td>" . $postdate . "</td>".
                 "<td>" . $postby . "</td>".
                 "<td>" . $compdate . "</td>".
                 "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                "<td>" . $inpby . "</td>".
                 "<td>" . $findate . "</td>".
+                "<td>" . $finby . "</td>".
                 "<td>" . $assetdesc . "</td>".
                 "<td>" . 
                 /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
@@ -2249,6 +2262,157 @@ function displayAssetCompleted(){
                                     "</div>" .
                                     include('../moveBackModal.php');
                 ;
+
+            }else{
+
+                echo
+                "<tr>" .
+                "<td>" . $custname . "</td>".
+                "<td>" . $postdate . "</td>".
+                "<td>" . $postby . "</td>".
+                "<td>" . $compdate . "</td>".
+                "<td>" . $actdate . "</td>".
+                "<td>" . $pendate . "</td>".
+                // "<td>" . $penby . "</td>".
+                "<td>" . $inpdate . "</td>".
+                // "<td>" . $inpby . "</td>".
+                "<td>" . $findate . "</td>".
+                // "<td>" . $finby . "</td>".
+                "<td>" . $assetdesc . "</td>".
+                "<td>" . 
+                /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+                " "    . */
+                "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Undo</button></a>" . 
+                " " .
+                "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+                "</td>" .
+                /* "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+                                                    "<p>Are you sure you want to reject this request?</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+                                                    "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" . */
+                "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+                                        "<div class='modal-dialog' role='document'>" .
+                                           "<form method='post'>" .
+                                                "<div class='modal-content'>" .
+                                                "<div class='modal-header'>" .
+                                                    "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+                                                        "<span aria-hidden='true'>&times;</span>" .
+                                                    "</button>" .
+                                                "</div>" .
+                                                "<div class='modal-body'>" .
+                                                    "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+                                                    "<p>Customer Name: " . $custname . "</p>" .
+                                                    "<p>Posted On: " . $postdate . "</p>" .
+                                                    "<p>Posted By: " . $postby . "</p>" .
+                                                    "<p>Expected Completion: " . $compdate . "</p>" .
+                                                    "<p>Target Completion: " . $actdate . "</p>" .
+                                                    "<p>Actual Completion: " . $findate . "</p>" .
+                                                    "<p>Assets Required: " . $assetdesc . "</p>" .
+                                                "</div>" .
+                                                "<div class='modal-footer'>" .
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>" .
+                                                    /* "<button type='submit' class='btn btn-primary' name='minprogress'>Mark as In-progress</button>" . */
+                                                "</div>" .
+                                            "</div>" .
+                                           "</form>" .
+                                        "</div>" .
+                                    "</div>" .
+                                    include('../moveBackModal.php');
+                ;
+
+            }
+            // echo
+            //     "<tr>" .
+            //     "<td>" . $custname . "</td>".
+            //     "<td>" . $postdate . "</td>".
+            //     "<td>" . $postby . "</td>".
+            //     "<td>" . $compdate . "</td>".
+            //     "<td>" . $actdate . "</td>".
+            //     "<td>" . $pendate . "</td>".
+            //     "<td>" . $penby . "</td>".
+            //     "<td>" . $inpdate . "</td>".
+            //     "<td>" . $inpby . "</td>".
+            //     "<td>" . $findate . "</td>".
+            //     "<td>" . $finby . "</td>".
+            //     "<td>" . $assetdesc . "</td>".
+            //     "<td>" . 
+            //     /* "<a href='#reject" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Reject</button></a>" . 
+            //     " "    . */
+            //     "<a href='#move" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-danger btn-sm'>Undo</button></a>" . 
+            //     " " .
+            //     "<a href='#edit" . $id . "' data-toggle='modal'>" . "<button type='button' class='btn btn-primary btn-sm'>View</button></a>" . 
+            //     "</td>" .
+            //     /* "<div class='modal fade' id='reject" . $id . "' tabindex='-1' role='dialog' aria-labelledby='reject" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='rejectModalLabel'>Reject Request</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='reject_req_id' value='" . $id . "'>" .
+            //                                         "<p>Are you sure you want to reject this request?</p>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>" .
+            //                                         "<button type='submit' class='btn btn-danger' name='reject'>Reject</button>" .
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>" . */
+            //     "<div class='modal fade' id='edit" . $id . "' tabindex='-1' role='dialog' aria-labelledby='edit" . $id . "Label' aria-hidden='true'>" .
+            //                             "<div class='modal-dialog' role='document'>" .
+            //                                "<form method='post'>" .
+            //                                     "<div class='modal-content'>" .
+            //                                     "<div class='modal-header'>" .
+            //                                         "<h5 class='modal-title id='editModalLabel'>Request Details</h5>" .
+            //                                         "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" .
+            //                                             "<span aria-hidden='true'>&times;</span>" .
+            //                                         "</button>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-body'>" .
+            //                                         "<input type='hidden' name='edit_req_id' value='" . $id . "'>" .
+            //                                         "<p>Customer Name: " . $custname . "</p>" .
+            //                                         "<p>Posted On: " . $postdate . "</p>" .
+            //                                         "<p>Posted By: " . $postby . "</p>" .
+            //                                         "<p>Expected Completion: " . $compdate . "</p>" .
+            //                                         "<p>Target Completion: " . $actdate . "</p>" .
+            //                                         "<p>Actual Completion: " . $findate . "</p>" .
+            //                                         "<p>Assets Required: " . $assetdesc . "</p>" .
+            //                                     "</div>" .
+            //                                     "<div class='modal-footer'>" .
+            //                                         "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>" .
+            //                                         /* "<button type='submit' class='btn btn-primary' name='minprogress'>Mark as In-progress</button>" . */
+            //                                     "</div>" .
+            //                                 "</div>" .
+            //                                "</form>" .
+            //                             "</div>" .
+            //                         "</div>" .
+            //                         include('../moveBackModal.php');
+            //     ;
         }
     }
 }
