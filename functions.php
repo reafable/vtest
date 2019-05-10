@@ -227,7 +227,7 @@ function postAssetRequest(){
     $query = "INSERT INTO requests 
               (id, uid, type, custname, postdate, compdate, servdesc, serv_type, assetdesc, postby, status, branch, department) 
               VALUES 
-              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', 'N/A', 'N/A', '" . implode(', ', $insertVal) . "', '$user', 'pooled', '$branch', '$department')";
+              (NULL, '" . $_SESSION['uid'] . "', 'asset', '$custname', '$postdate', '$compdate', 'N/A', 'N/A', '" . implode(',<br>', $insertVal) . "', '$user', 'pooled', '$branch', '$department')";
     mysqli_query($db, $query);
     header('location: ../requests/confirmation.php');
 }
